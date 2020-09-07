@@ -1,12 +1,13 @@
 package com.gunho0406.imagecash;
 
 public class Item {
-    String url;
-    String title;
+    String user,bitmap,title,date;
 
-    public Item(String url, String title) {
+    public Item(String user, String bitmap, String title, String date) {
         super();
-        this.url = url;
+        this.user = user;
+        this.bitmap = bitmap;
         this.title = title;
+        this.date = date;
     }
 }

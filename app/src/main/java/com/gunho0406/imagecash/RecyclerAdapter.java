@@ -34,7 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
-        String url = list.get(position).url;
+        String url = list.get(position).bitmap;
 
 
         Glide.with(context)
@@ -45,6 +45,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
         holder.title.setText(list.get(position).title);
+        holder.user.setText(list.get(position).user);
     }
 
     @Override
@@ -54,11 +55,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
-        private TextView title;
+        private TextView title, user, date;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
+            user = (TextView) itemView.findViewById(R.id.user);
         }
     }
 }
