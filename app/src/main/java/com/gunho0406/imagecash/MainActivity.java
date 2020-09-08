@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerAdapter adapter;
     RecyclerView rview;
     ArrayList<Item> list = new ArrayList<>();
-    String url = "http://192.168.2.2/";
+    String url = getString(R.string.url);
     URLConnector task;
 
     String user,bitmap,title,date;
