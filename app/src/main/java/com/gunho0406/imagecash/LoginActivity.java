@@ -5,17 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,58 +27,63 @@ import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
     String sId, sPw;
+    String home = "http://192.168.2.2/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Content View가 설정된 후에 SystemBartintManager 인스턴스를 생성합시다.
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
 
-        // 상태바를 투명하게 합니다.
-        tintManager.setStatusBarTintEnabled(true);
-
-        // NavigationBar도 투명하게 할 수 있습니다. (NavigationBar는 하단의 버튼 영역을 말합니다.)
-        tintManager.setNavigationBarTintEnabled(true);
-
-        // StatusBar를 20% 투명도를 가지게 합니다.
-        tintManager.setTintColor(Color.parseColor("#01000000"));
 
         Button loginbtn = (Button) findViewById(R.id.login);
+        final EditText etId = (EditText) findViewById(R.id.editid);
+        final EditText etPw = (EditText) findViewById(R.id.editpassword);
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bt_Login(v);
+                sId = etId.getText().toString();
+                sPw = etPw.getText().toString();
+                bt_Login(v,sId,sPw);
             }
         });
     }
-    public void bt_Login(View v) {
+    public void bt_Login(View v, String sId, String sPw) {
+
         try{
-            EditText etId = (EditText) v.findViewById(R.id.editid);
-            EditText etPw = (EditText) v.findViewById(R.id.editpassword);
-            sId = etId.getText().toString();
-            sPw = etPw.getText().toString();
+
         }catch (NullPointerException e)
         {
             Log.e("err",e.getMessage());
         }
 
-        loginDB lDB = new loginDB();
+        loginDB lDB = new loginDB(sId,sPw,v);
         lDB.execute();
 
+
+
     }
-    public class loginDB extends AsyncTask<Void, Integer, Void> {
-        String data;
+    public class loginDB extends AsyncTask<Void, Integer, String> {
+
+        String data = "";
+        String sId, sPw;
+        View v;
+
+        public loginDB(String sId, String sPw, View v) {
+            this.sId = sId;
+            this.sPw = sPw;
+            this.v = v;
+        }
         @Override
-        protected Void doInBackground(Void... unused) {
+        protected String doInBackground(Void... unused) {
 
             /* 인풋 파라메터값 생성 */
             String param = "u_id=" + sId + ""+ "&u_pw=" + sPw + "";
             Log.e("POST",param);
             try {
+                Log.e("제발","되어라");
                 /* 서버연결 */
                 URL url = new URL(
-                        getString(R.string.url)+"login.php");
+                        home+"login.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestMethod("POST");
@@ -116,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Log.e("RESULT","에러 발생! ERRCODE = " + data);
+                    Log.e("RESULT","에러우 발생! ERRCODE = " + data);
                 }
 
             } catch (MalformedURLException e) {
@@ -125,57 +129,23 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return null;
+            return data;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getApplicationContext());
+        protected void onPostExecute(String data) {
+            super.onPostExecute(data);
             if (data.equals("1")) {
                 Log.e("RESULT", "성공적으로 처리되었습니다!");
-                alertBuilder
-                        .setTitle("알림")
-                        .setMessage("성공적으로 등록되었습니다!")
-                        .setCancelable(true)
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                AlertDialog dialog = alertBuilder.create();
-                dialog.show();
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                i.putExtra("userID",sId);
+                startActivity(i);
             } else if (data.equals("0")) {
                 Log.e("RESULT", "비밀번호가 일치하지 않습니다.");
-                alertBuilder
-                        .setTitle("알림")
-                        .setMessage("비밀번호가 일치하지 않습니다.")
-                        .setCancelable(true)
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //finish();
-                            }
-                        });
-                AlertDialog dialog = alertBuilder.create();
-                dialog.show();
+                Toast.makeText(getApplicationContext(),"아이디나 비밀번호가 일치하지 않습니다.",Toast.LENGTH_LONG).show();
             } else {
-                Log.e("RESULT", "에러 발생! ERRCODE = " + data);
-                alertBuilder
-                        .setTitle("알림")
-                        .setMessage("등록중 에러가 발생했습니다! errcode : " + data)
-                        .setCancelable(true)
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //finish();
-                            }
-                        });
-                AlertDialog dialog = alertBuilder.create();
-                dialog.show();
+                Log.e("RESULT", "에러ㅅㅂ 발생! ERRCODE = " + data);
+                Toast.makeText(getApplicationContext(),"아이디나 비밀번호가 일치하지 않습니다.",Toast.LENGTH_LONG).show();
             }
 
 
