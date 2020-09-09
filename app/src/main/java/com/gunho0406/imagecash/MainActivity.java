@@ -9,12 +9,17 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     String url = "http://192.168.2.2/";
     URLConnector task;
     String userID;
+    public final String PREFERENCE = "userinfo";
     String user,bitmap,title,date;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -49,40 +55,60 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
+        SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+        final String result = pref.getString("userID","");
+
+        ImageView userBtn = (ImageView) findViewById(R.id.userBtn);
+        userBtn.setBackground(new ShapeDrawable(new OvalShape()));
+        userBtn.setClipToOutline(true);
+        userBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(result == "") {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    Log.e("d","sfd");
+                }else{
+                    BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
+                    bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
+                }
+
+            }
+        });
+
+
+        if(result == "") {
+            Log.e("d","sfd");
+            Glide.with(this)
+                    .load(R.drawable.ic_baseline_account_circle_24)
+                    .override(50,50)
+                    .into(userBtn);
+        }else{
+            String profile = result+"_profile.jpg";
+            Log.e("profile",result+"_profile.jpg");
+            Glide.with(this)
+                    .load(url+profile)
+                    .override(50,50)
+                    .into(userBtn);
+        }
+
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,Upload.class);
-                startActivity(intent);
+                if(result=="") {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(MainActivity.this, Upload.class);
+                    startActivity(intent);
+                }
             }
         });
 
-        userID = "1";
 
-        Intent i = getIntent();
-        userID = i.getStringExtra("userID");
 
-        ImageButton userBtn = (ImageButton) findViewById(R.id.userBtn);
-        userBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        /*if(userID=="1") {
-            Intent login = new Intent(this,LoginActivity.class);
-            startActivity(login);
-        }else {
-            String setBitmap = setuserProfile(userID);
-            Glide.with(this)
-                    .load(url+setBitmap)
-                    .centerCrop()
-                    .into(userBtn);
-
-        }*/
 
         startTask();
 
@@ -175,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < ja.length();i++)
             {
                 JSONObject jo = ja.getJSONObject(i);
-                profileImg = jo.getString("user");
+                profileImg = jo.getString("profile");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -224,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             conn.disconnect();
             return result;
         } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(), "데이터 전송 준비 과정 중 오류 발생", Toast.LENGTH_SHORT).show();
+            Log.e("plz","plz");
             return null;
         }
     }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ import java.net.URL;
 public class LoginActivity extends AppCompatActivity {
     String sId, sPw;
     String home = "http://192.168.2.2/";
+    public final String PREFERENCE = "userinfo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +139,18 @@ public class LoginActivity extends AppCompatActivity {
             super.onPostExecute(data);
             if (data.equals("1")) {
                 Log.e("RESULT", "성공적으로 처리되었습니다!");
+
+                SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+
+                // SharedPreferences 의 데이터를 저장/편집 하기위해 Editor 변수를 선언한다.
+                SharedPreferences.Editor editor = pref.edit();
+                // key값에 value값을 저장한다.
+                // String, boolean, int, float, long 값 모두 저장가능하다.
+                editor.putString("userID",sId);
+                // 메모리에 있는 데이터를 저장장치에 저장한다.
+                editor.commit();
+
+
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 i.putExtra("userID",sId);
                 startActivity(i);

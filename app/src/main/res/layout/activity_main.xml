@@ -18,7 +18,8 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
 
-            <ImageButton
+
+            <ImageView
                 android:id="@+id/userBtn"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -27,11 +28,12 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_gravity="end"
-                android:background="@drawable/trumpet"
+                android:background="@drawable/ic_baseline_account_circle_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                android:focusable="true"/>
 
         </androidx.appcompat.widget.Toolbar>
 
