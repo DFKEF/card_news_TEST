@@ -23,7 +23,10 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +49,7 @@ public class Upload extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
         tedPermission();
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +70,19 @@ public class Upload extends AppCompatActivity {
                 goToAlbum();
             }
         });
+
+        String[] facilityList = {
+                "과학/김정훈", "과학/이사랑", "과학/이수진", "과학/윤순재", "과학/지성호",
+                "사회/현정호", "사회/이평구", "국어/권영미", "수학/오정미"
+        };
+
+        Spinner selectTeacher = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter adapter = new ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                facilityList);
+        selectTeacher.setAdapter(adapter);
+        selectTeacher.setSelection(0);
 
     }
     private void init() {

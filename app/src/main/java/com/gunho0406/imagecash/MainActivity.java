@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("홈");
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
         SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             String profile = result+"_profile.jpg";
             Log.e("profile",result+"_profile.jpg");
             Glide.with(this)
-                    .load(url+profile)
+                    .load(url+"profiles/"+profile)
                     .override(50,50)
                     .into(userBtn);
         }
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         {
             JSONObject jo = ja.getJSONObject(i);
             user = jo.getString("user");
-            bitmap = url+jo.getString("bitmap");
+            bitmap = url+"cards/"+jo.getString("bitmap");
             title = jo.getString("title");
             date = jo.getString("date");
             list.add(new Item(user,bitmap,title,date));
