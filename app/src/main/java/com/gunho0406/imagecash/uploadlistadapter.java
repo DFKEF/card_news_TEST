@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,8 +29,16 @@ public class uploadlistadapter extends RecyclerView.Adapter<uploadlistadapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull uploadlistadapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull uploadlistadapter.ViewHolder holder, final int position) {
         holder.filename.setText(filelist.get(position).toString());
+        holder.clearImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filelist.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, filelist.size());
+            }
+        });
     }
 
     @Override
@@ -39,9 +48,11 @@ public class uploadlistadapter extends RecyclerView.Adapter<uploadlistadapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView filename;
+        ImageButton clearImg;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             filename = (TextView) itemView.findViewById(R.id.filename);
+            clearImg = (ImageButton) itemView.findViewById(R.id.clearbtn);
         }
     }
 }

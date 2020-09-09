@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.File;
@@ -66,6 +68,7 @@ public class Upload extends AppCompatActivity {
                 goToAlbum();
             }
         });
+
     }
     private void init() {
         recyclerView = (RecyclerView) findViewById(R.id.uploadview);
@@ -129,39 +132,44 @@ public class Upload extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_FROM_ALBUM) {
+            if(data==null) {
 
-            Uri photoUri = data.getData();
+            }else {
 
-            Cursor cursor = null;
+                Uri photoUri = data.getData();
 
-            try {
+                Cursor cursor = null;
 
-                /*
-                 *  Uri 스키마를
-                 *  content:/// 에서 file:/// 로  변경한다.
-                 */
-                String[] proj = {MediaStore.Images.Media.DATA};
+                try {
 
-                assert photoUri != null;
-                cursor = getContentResolver().query(photoUri, proj, null, null, null);
+                    /*
+                     *  Uri 스키마를
+                     *  content:/// 에서 file:/// 로  변경한다.
+                     */
+                    String[] proj = {MediaStore.Images.Media.DATA};
 
-                assert cursor != null;
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    assert photoUri != null;
+                    cursor = getContentResolver().query(photoUri, proj, null, null, null);
 
-                cursor.moveToFirst();
+                    assert cursor != null;
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 
-                tempFile = new File(cursor.getString(column_index));
+                    cursor.moveToFirst();
 
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
+                    tempFile = new File(cursor.getString(column_index));
+                    fileurl = getRealPathFromURI(photoUri);
+                    fileurllist.add(fileurl);
+                    String title = fileurl.replace("/storage/emulated/0/", "");
+                    filelist.add(title);
+                    init();
+
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
                 }
             }
-            fileurl = getRealPathFromURI(photoUri);
-            fileurllist.add(fileurl);
-            String title = fileurl.replace("/storage/emulated/0/","");
-            filelist.add(title);
-            init();
+
         }
     }
 }
