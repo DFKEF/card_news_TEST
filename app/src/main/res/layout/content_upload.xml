@@ -99,6 +99,12 @@
                 android:layout_margin="10dp"
                 android:padding="10dp"/>
 
+            <Button
+                android:id="@+id/up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
         </LinearLayout>
     </ScrollView>
 

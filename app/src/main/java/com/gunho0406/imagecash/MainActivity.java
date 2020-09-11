@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
                     Log.e("d","sfd");
+                    finish();
                 }else{
                     BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
                     bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 if(result=="") {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
                 }else {
                     Intent intent = new Intent(MainActivity.this, Upload.class);
                     startActivity(intent);
@@ -144,7 +146,11 @@ public class MainActivity extends AppCompatActivity {
                 refreshLayout.setRefreshing(false);
             }
         });
+
+
     }
+
+
 
     private void init(){
         rview = (RecyclerView)findViewById(R.id.rview);

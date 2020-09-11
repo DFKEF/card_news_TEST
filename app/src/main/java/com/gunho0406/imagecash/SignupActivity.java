@@ -3,8 +3,12 @@ package com.gunho0406.imagecash;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,11 +28,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity {
     String sId,sPw, sPw_chk,sName, sEmail;
     EditText et_id, et_pw, et_pw_chk,et_email, et_name;
     String url = "http://192.168.2.2/";
+    Context context;
 
 
     @Override
@@ -44,10 +51,11 @@ public class SignupActivity extends AppCompatActivity {
         et_email = (EditText) findViewById(R.id.email);
         et_name = (EditText) findViewById(R.id.name);
         Button joinBtn = (Button) findViewById(R.id.join);
+        context = this;
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bt_Join(v);
+                bt_Join(v,context);
             }
         });
 
@@ -78,7 +86,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    public void bt_Join(View view)
+    public void bt_Join(View view, Context context)
     {
         /* 버튼을 눌렀을 때 동작하는 소스 */
         sId = et_id.getText().toString();
@@ -97,9 +105,19 @@ public class SignupActivity extends AppCompatActivity {
                     Toast.makeText(SignupActivity.this,"이메일 형식이 아닙니다",Toast.LENGTH_SHORT).show();
                 }else{
                     if(sEmail.contains("@esan.hs.kr")){
-                        Log.e("qq","dd");
-                        registDB registDB = new registDB(sId,sPw,sEmail,sName);
-                        registDB.execute();
+                        if (sId.trim().length() < 5){
+                            Toast.makeText(SignupActivity.this,"아이디는 최소 5자 이상이어야 합니다.",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            if(!Pattern.matches("^[a-zA-Z0-9!@.#$%^&*?_~]{4,16}$", sPw)) {
+                                Toast.makeText(SignupActivity.this, "비밀번호 형식을 지켜주세요.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Log.e("qq", "dd");
+                                registDB registDB = new registDB(sId, sPw, sEmail, sName, context);
+                                    registDB.execute();
+
+                            }
+                        }
                     }else{
                         Toast.makeText(SignupActivity.this,"학교에서 받은 이메일을 입력해 주세요\n(형식: esan_xx_xxxxx@esan.hs.kr)",Toast.LENGTH_SHORT).show();
                     }
@@ -116,20 +134,24 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    public class registDB extends AsyncTask<Void, Integer, Void> {
+    public class registDB extends AsyncTask<Void, Integer, Integer> {
         String sId, sPw, sEmail, sName;
-        public registDB(String sId, String sPw, String sEmail, String sName) {
+        Context context;
+        int finishcode = 0;
+        public registDB(String sId, String sPw, String sEmail, String sName, Context context) {
             this.sId = sId;
             this.sPw = sPw;
             this.sEmail = sEmail;
             this.sName = sName;
+            this.context = context;
+            //this.sProfile = sProfile;
         }
 
         @Override
-        protected Void doInBackground(Void... unused) {
+        protected Integer doInBackground(Void... unused) {
 
             /* 인풋 파라메터값 생성 */
-            String param = "u_id=" + sId + "&u_pw=" + sPw + "" + "&u_email" + sEmail + "&u_name" + sName;
+            String param = "u_id=" + sId + "&u_pw=" + sPw + "&u_email=" + sEmail + "&u_name=" + sName + "&u_profile=" + "gunho0406_profile.jpg";
             try {
                 /* 서버연결 */
                 URL home = new URL(
@@ -162,15 +184,14 @@ public class SignupActivity extends AppCompatActivity {
                 data = buff.toString().trim();
                 Log.e("RECV DATA",data);
 
-                Log.e("RECV DATA",data);
-
                 if(data.equals("0000")) {
+                    finishcode = 9;
                     Log.e("RESULT","성공적으로 처리되었습니다!");
-                    Toast.makeText(getApplicationContext(),"회원이 되신 것을 환영합니다!",Toast.LENGTH_LONG).show();
+
                 }
                 else {
                     Log.e("RESULT","에러 발생! ERRCODE = " + data);
-                    Toast.makeText(getApplicationContext(),"에러 발생!",Toast.LENGTH_LONG).show();
+                    Log.e("dd DATA",sId+sEmail+sName+sPw);
                 }
 
             } catch (MalformedURLException e) {
@@ -179,9 +200,22 @@ public class SignupActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return null;
+            return finishcode;
         }
 
+        @Override
+        protected void onPostExecute(Integer integer) {
+            if(integer == 9) {
+                Intent intent = new Intent(context,LoginActivity.class);
+                context.startActivity(intent);
+                ((Activity)context).finish();
+                Log.e("설마", String.valueOf(integer));
+            }else{
+                Log.e("dd", String.valueOf(integer));
+                Toast.makeText(context,"에러 발생! 아이디 혹은 이메일이 중복되었습니다.",Toast.LENGTH_LONG).show();
+                super.onPostExecute(integer);
+            }
+        }
     }
 
 

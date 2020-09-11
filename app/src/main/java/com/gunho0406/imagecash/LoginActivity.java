@@ -58,9 +58,18 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this,SignupActivity.class);
                 startActivity(i);
+                finish();
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this,MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
     public void bt_Login(View v, String sId, String sPw) {
 
         try{
@@ -166,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 i.putExtra("userID",sId);
                 startActivity(i);
+                finish();
             } else if (data.equals("0")) {
                 Log.e("RESULT", "비밀번호가 일치하지 않습니다.");
                 Toast.makeText(getApplicationContext(),"아이디나 비밀번호가 일치하지 않습니다.",Toast.LENGTH_LONG).show();
