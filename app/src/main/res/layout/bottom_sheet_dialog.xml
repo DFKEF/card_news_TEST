@@ -16,8 +16,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="12dp"
-            android:layout_marginLeft="8dp"
-            />
+            android:layout_marginLeft="8dp" />
         <TextView
             android:text="Message"
             android:textColor="#838383"
@@ -49,7 +48,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/cloudLo"
+        android:id="@+id/request"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
@@ -58,14 +57,14 @@
         android:background="?attr/selectableItemBackground"
         >
         <ImageView
-            android:src="@drawable/ic_baseline_clear_24"
+            android:src="@drawable/ic_baseline_folder_24"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="12dp"
             android:layout_marginLeft="8dp"
             />
         <TextView
-            android:text="Cloud"
+            android:text="요청 중인 뉴스"
             android:textColor="#838383"
             android:textSize="16sp"
             android:layout_width="match_parent"

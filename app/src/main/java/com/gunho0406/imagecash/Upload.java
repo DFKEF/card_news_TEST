@@ -1,12 +1,16 @@
 package com.gunho0406.imagecash;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,38 +18,43 @@ import com.google.android.material.snackbar.Snackbar;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class Upload extends AppCompatActivity {
@@ -58,8 +67,13 @@ public class Upload extends AppCompatActivity {
     RecyclerView recyclerView;
     Context context;
     String url = "http://192.168.2.2/";
-
+    public final String PREFERENCE = "userinfo";
     int serverResponseCode = 0;
+    ArrayList<String> urllist = new ArrayList<>();
+    String subjectrow, subject, teacher;
+    String date_text, date_row;
+
+
 
 
     @Override
@@ -70,6 +84,9 @@ public class Upload extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
         tedPermission();
+        Intent intent = getIntent();
+        subjectrow = intent.getStringExtra("subject");
+        teacher = intent.getStringExtra("teacher");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -79,12 +96,37 @@ public class Upload extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Date date = Calendar.getInstance().getTime();
+        date_text = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(date);
+        date_row = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date);
+
+        switch (subjectrow) {
+            case "국어":
+                subject = "korean";
+                break;
+            case "수학" :
+                subject = "math";
+                break;
+            case "영어" :
+                subject = "english";
+                break;
+            case "과학" :
+                subject = "science";
+                break;
+            case "사회" :
+                subject = "society";
+                break;
+
+        }
+
         context = this;
 
         init();
 
 
-        Button uploadbutton = (Button) findViewById(R.id.uploadbutton);
+
+        Button uploadbutton = (Button) findViewById(R.id.addbutton);
         uploadbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,39 +134,31 @@ public class Upload extends AppCompatActivity {
             }
         });
 
-        String[] facilityList = {
-                "과학/김정훈", "과학/이사랑", "과학/이수진", "과학/윤순재", "과학/지성호",
-                "사회/현정호", "사회/이평구", "국어/권영미", "수학/오정미"
-        };
 
-        Spinner selectTeacher = (Spinner)findViewById(R.id.spinner);
-        ArrayAdapter adapter = new ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                facilityList);
-        selectTeacher.setAdapter(adapter);
-        selectTeacher.setSelection(0);
 
-        Button up = (Button)findViewById(R.id.up);
-        up.setOnClickListener(new View.OnClickListener() {
+        ImageButton uploadbtn = (ImageButton) findViewById(R.id.uploadbutton);
+        uploadbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Upload image to server
                 new Thread(new Runnable() {
                     public void run() {
-
-                        uploadFile("/storage/emulated/0/"+filelist.get(0));
-
+                        SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+                        final String sId = pref.getString("userID","");
+                        for(int i=0; i<filelist.size();i++) {
+                            int j = i+1;
+                            uploadFile("/storage/emulated/0/"+filelist.get(i),sId,i,subject,date_text);
+                            urllist.add(sId+"_"+j+".jpg");
+                        }
                     }
                 }).start();
             }
-
         });
 
     }
+
     private void init() {
         recyclerView = (RecyclerView) findViewById(R.id.uploadview);
-        uploadlistadapter adapter = new uploadlistadapter(context,filelist,file_cur);
+        uploadlistadapter adapter = new uploadlistadapter(context,filelist);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -148,16 +182,52 @@ public class Upload extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        EditText editTitle = (EditText) findViewById(R.id.editTitle);
+        EditText editContent = (EditText)findViewById(R.id.editContent);
+        final String title = editTitle.getText().toString();
+        final String content = editContent.getText().toString();
         int id = item.getItemId();
 
+
+
+
         //noinspection SimplifiableIfStatement
-        if(id==R.id.send){
+        if(id==R.id.next){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("검토").setMessage("제목 : "+title+"\n과목 : "+subject+"/"+teacher+"이 맞습니까?");
+
+            builder.setPositiveButton("네", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    if(title.isEmpty()||urllist.isEmpty()) {
+                        Toast.makeText(getApplicationContext(),"사진 업로드 또는 제목을 입력해주세요",Toast.LENGTH_SHORT).show();
+                    }else{
+                        SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+                        final String sId = pref.getString("userID","");
+                        Parse parse = new Parse(sId,title,content, subject,subjectrow,date_text,date_row);
+                        parse.execute();
+                    }
+                }
+            });
+
+            builder.setNegativeButton("아니요", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int id)
+                {
+                    Toast.makeText(getApplicationContext(), "다시 확인해주세요", Toast.LENGTH_SHORT).show();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
 
             return true;
         }
         return super.onOptionsItemSelected(item);
 
     }
+
+
 
     private String getRealPathFromURI(Uri contentURI) {
 
@@ -240,7 +310,6 @@ public class Upload extends AppCompatActivity {
 
                     tempFile = new File(cursor.getString(column_index));
                     fileurl = getRealPathFromURI(photoUri);
-                    file_cur.add(tempFile);
                     String title = fileurl.replace("/storage/emulated/0/", "");
                     filelist.add(title);
                     init();
@@ -255,11 +324,120 @@ public class Upload extends AppCompatActivity {
         }
     }
 
-    public int uploadFile(String sourceFileUri) {
+
+
+    public class Parse extends AsyncTask<Void, Integer, Integer> {
+
+        String data = "";
+        String sId, title, content,subject,bitmap,subjectrow, date_text, date_row;
+        int imgnum;
+        int finishcode = 0;
+
+        public Parse(String sId, String title, String content, String subject, String subjectrow, String date_text, String date_row) {
+            this.sId = sId;
+            this.title = title;
+            this.content = content;
+            this.subject = subject;
+            this.subjectrow = subjectrow;
+            this.date_text = date_text;
+            this.date_row = date_row;
+        }
+        @Override
+        protected Integer doInBackground(Void... unused) {
+            //인풋 파라메터값 생성
+            Date date = Calendar.getInstance().getTime();
+            Log.d("webnautes", date_text);
+            imgnum = urllist.size();
+            Log.e("size",String.valueOf(imgnum));
+
+            bitmap = sId+"_"+date_text+"_"+subject+"_1.jpg";
+
+            String param = "u_id=" + sId + "&title=" + title + "&date=" + date_row + "&content=" + content + "&bitmap=" + bitmap + "&subject=" + subjectrow + "&imgnum=" + imgnum;
+            try {
+                // 서버연결
+                URL home = new URL(
+                        url+"uploadarticle.php");
+                HttpURLConnection conn = (HttpURLConnection) home.openConnection();
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.connect();
+
+                // 안드로이드 -> 서버 파라메터값 전달
+                OutputStream outs = conn.getOutputStream();
+                outs.write(param.getBytes("UTF-8"));
+                outs.flush();
+                outs.close();
+
+                // 서버 -> 안드로이드 파라메터값 전달
+                InputStream is = null;
+                BufferedReader in = null;
+                String data = "";
+
+                is = conn.getInputStream();
+                in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
+                String line = null;
+                StringBuffer buff = new StringBuffer();
+                while ( ( line = in.readLine() ) != null )
+                {
+                    buff.append(line + "\n");
+                }
+                data = buff.toString().trim();
+                Log.e("RECV DATA",data);
+
+                if(data.equals("0000")) {
+                    finishcode = 9;
+                    Log.e("RESULT","성공적으로 처리되었습니다!");
+                    Log.e("TEST",sId+title+date_text+bitmap+subject);
+
+                }
+                else {
+                    Log.e("RESULT","에러 발생! ERRCODE = " + data);
+                    Log.e("dd DATA",sId+title+date_text+bitmap+subject);
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return finishcode;
+        }
+
+        @Override
+        protected void onPostExecute(Integer data) {
+            super.onPostExecute(data);
+            if(data == 9) {
+                Toast.makeText(getApplicationContext(), "선생님께 업로드 요청되었습니다!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context,Request.class);
+                context.startActivity(intent);
+                ((Activity)context).finish();
+                Log.e("설마", String.valueOf(data));
+            }else{
+                Log.e("dd", String.valueOf(data));
+                Toast.makeText(context,"에러 발생!",Toast.LENGTH_LONG).show();
+                super.onPostExecute(data);
+            }
+
+        }
+    }
+
+    /*Toast.makeText(getApplicationContext(), "선생님께 업로드 요청되었습니다!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(),Request.class);
+                intent.putExtra("title",title);
+                intent.putExtra("content",content);
+                intent.putExtra("list",filelist);
+                startActivity(intent);
+                finish();*/
+
+
+
+    public int uploadFile(String sourceFileUri, String sId, int pos, String subject, String date_text) {
 
 
         String fileName = sourceFileUri;
-
+        String num = String.valueOf(pos+1);
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
         String lineEnd = "\r\n";
@@ -288,8 +466,8 @@ public class Upload extends AppCompatActivity {
 
                 // open a URL connection to the Servlet
                 FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                URL home = new URL(url+"cards/upload.php");
-
+                URL home = new URL(url+"upload.php");
+                String img = sId+"_"+date_text+"_"+subject+"_"+num+".jpg";
                 // Open a HTTP  connection to  the URL
                 conn = (HttpURLConnection) home.openConnection();
                 conn.setDoInput(true); // Allow Inputs
@@ -305,85 +483,85 @@ public class Upload extends AppCompatActivity {
 
                 dos.writeBytes(twoHyphens + boundary + lineEnd);
                 dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
-                        + fileName + "" + lineEnd);
+                        + img + "" + lineEnd);
+                Log.e("hello",img);
 
-	               dos.writeBytes(lineEnd);
+                dos.writeBytes(lineEnd);
 
-	               // create a buffer of  maximum size
-	               bytesAvailable = fileInputStream.available();
+                // create a buffer of  maximum size
+                bytesAvailable = fileInputStream.available();
 
-	               bufferSize = Math.min(bytesAvailable, maxBufferSize);
-	               buffer = new byte[bufferSize];
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                buffer = new byte[bufferSize];
 
-	               // read file and write it into form...
-	               bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                // read file and write it into form...
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-	               while (bytesRead > 0) {
+                while (bytesRead > 0) {
 
-	                 dos.write(buffer, 0, bufferSize);
-	                 bytesAvailable = fileInputStream.available();
-	                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
-	                 bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                    dos.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-	                }
+                }
 
-	               // send multipart form data necesssary after file data...
-	               dos.writeBytes(lineEnd);
-	               dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                // send multipart form data necesssary after file data...
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
-	               // Responses from the server (code and message)
-	               serverResponseCode = conn.getResponseCode();
-	               String serverResponseMessage = conn.getResponseMessage();
+                // Responses from the server (code and message)
+                serverResponseCode = conn.getResponseCode();
+                String serverResponseMessage = conn.getResponseMessage();
 
-	               Log.i("uploadFile", "HTTP Response is : "
-	            		   + serverResponseMessage + ": " + serverResponseCode);
+                Log.i("uploadFile", "HTTP Response is : "
+                        + serverResponseMessage + ": " + serverResponseCode);
 
-	               if(serverResponseCode == 200){
+                if(serverResponseCode == 200){
 
-	                   runOnUiThread(new Runnable() {
-	                        public void run() {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
 
-	                            Toast.makeText(Upload.this, "File Upload Complete.",
-	                            		     Toast.LENGTH_SHORT).show();
-	                        }
-	                    });
-	               }
+                            Toast.makeText(Upload.this, "사진 업로드가 완료되었습니다.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
 
-	               //close the streams //
-	               fileInputStream.close();
-	               dos.flush();
-	               dos.close();
+                //close the streams //
+                fileInputStream.close();
+                dos.flush();
+                dos.close();
 
-	          } catch (MalformedURLException ex) {
+            } catch (MalformedURLException ex) {
 
 
-	              ex.printStackTrace();
+                ex.printStackTrace();
 
-	              runOnUiThread(new Runnable() {
-	                  public void run() {
-	                      Toast.makeText(Upload.this, "MalformedURLException",
-                                                              Toast.LENGTH_SHORT).show();
-	                  }
-	              });
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(Upload.this, "에러 발생!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-	              Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
-	          } catch (Exception e) {
-	              e.printStackTrace();
+                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+            } catch (Exception e) {
+                e.printStackTrace();
 
-	              runOnUiThread(new Runnable() {
-	                  public void run() {
-	                      Toast.makeText(Upload.this, "Got Exception : see logcat ",
-	                    		  Toast.LENGTH_SHORT).show();
-	                  }
-	              });
-	              Log.e("Upload file to server", "Exception : "
-	            		                           + e.getMessage(), e);
-	          }
-	          return serverResponseCode;
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(Upload.this, "Got Exception : see logcat ",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Log.e("Upload file to server", "Exception : "
+                        + e.getMessage(), e);
+            }
+            return serverResponseCode;
 
-           } // End else block
-         }
-
+        } // End else block
+    }
 
 
 }

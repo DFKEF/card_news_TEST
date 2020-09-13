@@ -1,26 +1,26 @@
 package com.gunho0406.imagecash;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class uploadlistadapter extends RecyclerView.Adapter<uploadlistadapter.ViewHolder> {
     Context context;
     ArrayList<String> filelist = new ArrayList<>();
-    ArrayList<File> file_cur = new ArrayList<>();
-    public uploadlistadapter(Context context, ArrayList filelist, ArrayList file_cur) {
+    ArrayList<String > file_cur = new ArrayList<>();
+    public uploadlistadapter(Context context, ArrayList filelist) {
         this.context = context;
         this.filelist = filelist;
-        this.file_cur = file_cur;
     }
 
 
@@ -34,11 +34,12 @@ public class uploadlistadapter extends RecyclerView.Adapter<uploadlistadapter.Vi
     @Override
     public void onBindViewHolder(@NonNull uploadlistadapter.ViewHolder holder, final int position) {
         holder.filename.setText(filelist.get(position).toString());
+        Uri home = Uri.parse("/storage/emulated/0/"+filelist.get(position));
+        holder.preview.setImageURI(home);
         holder.clearImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 filelist.remove(position);
-                file_cur.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, filelist.size());
             }
@@ -53,10 +54,12 @@ public class uploadlistadapter extends RecyclerView.Adapter<uploadlistadapter.Vi
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView filename;
         ImageButton clearImg;
+        ImageView preview;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             filename = (TextView) itemView.findViewById(R.id.filename);
             clearImg = (ImageButton) itemView.findViewById(R.id.clearbtn);
+            preview = (ImageView) itemView.findViewById(R.id.uploadImg);
         }
     }
 }

@@ -34,7 +34,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     Context context;
@@ -45,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
     URLConnector task;
     String userID;
     public final String PREFERENCE = "userinfo";
-    String user,bitmap,title,date;
+    String user,bitmap,title,date,verify,subject, content;
+    int imgnum;
+    ArrayList<String> teacherlist = new ArrayList<>();
+    ArrayList<String> subjectlist = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
         SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
         final String result = pref.getString("userID","");
+        startTeachers();
 
         ImageView userBtn = (ImageView) findViewById(R.id.userBtn);
         userBtn.setBackground(new ShapeDrawable(new OvalShape()));
@@ -103,8 +111,12 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }else {
-                    Intent intent = new Intent(MainActivity.this, Upload.class);
-                    startActivity(intent);
+                    Log.e("teacher",teacherlist.get(0));
+                    CustomDialog customDialog = new CustomDialog(MainActivity.this,teacherlist,subjectlist);
+
+                    // 커스텀 다이얼로그를 호출한다.
+                    // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
+                    customDialog.callFunction();
                 }
             }
         });
@@ -173,7 +185,13 @@ public class MainActivity extends AppCompatActivity {
             bitmap = url+"cards/"+jo.getString("bitmap");
             title = jo.getString("title");
             date = jo.getString("date");
-            list.add(new Item(user,bitmap,title,date));
+            verify = jo.getString("verify");
+            subject = jo.getString("subject");
+            content = jo.getString("content");
+            imgnum = jo.getInt("imgnum");
+            if(verify.equals("Y")){
+                list.add(new Item(user,bitmap,title,date,subject,content,imgnum));
+            }
         }
     }
 
@@ -195,25 +213,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String setuserProfile(String sId) {
-        String profileImg = "";
+    private void startTeachers(){
+        task = new URLConnector(url+"teacher.php");
+        task.start();
+        try{
+            task.join();
+        }
+        catch(InterruptedException e){
 
-        String result = HttpPostData(sId);
+        }
+        String result = task.getResult();
 
         try {
-            JSONObject root = new JSONObject(result);
-
-            JSONArray ja = root.getJSONArray("result");
-
-            for(int i = 0; i < ja.length();i++)
-            {
-                JSONObject jo = ja.getJSONObject(i);
-                profileImg = jo.getString("profile");
-            }
+            Teachers(result);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return profileImg;
+    }
+
+    private void Teachers(String result) throws JSONException {
+        JSONObject root = new JSONObject(result);
+
+        JSONArray ja = root.getJSONArray("result");
+
+        for(int i = 0; i < ja.length();i++)
+        {
+            String ver;
+            JSONObject jo = ja.getJSONObject(i);
+            ver = jo.getString("verify");
+            if(ver.equals("Y")){
+                teacherlist.add(jo.getString("name"));
+                subjectlist.add(jo.getString("subject"));
+            }
+        }
     }
 
     private String HttpPostData(String sId) {

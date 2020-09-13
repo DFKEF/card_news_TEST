@@ -21,8 +21,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
 
     private LinearLayout msgLo;
     private LinearLayout emailLo;
-    private LinearLayout cloudLo;
-    private LinearLayout bluetoothLo;
+    private LinearLayout request;
+    private LinearLayout logout;
     public final String PREFERENCE = "userinfo";
 
 
@@ -33,13 +33,13 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         View view = inflater.inflate(R.layout.bottom_sheet_dialog, container,false);
         msgLo = (LinearLayout) view.findViewById(R.id.msgLo);
         emailLo = (LinearLayout) view.findViewById(R.id.emailLo);
-        cloudLo = (LinearLayout) view.findViewById(R.id.cloudLo);
-        bluetoothLo = (LinearLayout) view.findViewById(R.id.quit);
+        request = (LinearLayout) view.findViewById(R.id.request);
+        logout = (LinearLayout) view.findViewById(R.id.quit);
 
         msgLo.setOnClickListener(this);
         emailLo.setOnClickListener(this);
-        cloudLo.setOnClickListener(this);
-        bluetoothLo.setOnClickListener(this);
+        request.setOnClickListener(this);
+        logout.setOnClickListener(this);
         return view;
     }
 
@@ -52,8 +52,9 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
             case R.id.emailLo:
                 Toast.makeText(getContext(),"Email",Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.cloudLo:
-                Toast.makeText(getContext(),"Cloud",Toast.LENGTH_SHORT).show();
+            case R.id.request:
+                Intent i = new Intent(getContext(),Request.class);
+                startActivity(i);
                 break;
             case R.id.quit:
                 SharedPreferences pref = view.getContext().getSharedPreferences(PREFERENCE, MODE_PRIVATE);
@@ -72,4 +73,5 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         }
         dismiss();
     }
+
 }

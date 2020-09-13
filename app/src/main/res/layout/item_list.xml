@@ -22,6 +22,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/hello" />
 
+
             <TextView
                 android:id="@+id/user"
                 android:layout_width="match_parent"
@@ -39,6 +40,26 @@
                 android:text="라이언은 귀여워"
                 android:textSize="17sp"
                 android:textStyle="bold" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="과목"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="5dp"
+                android:gravity="start"/>
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2020.04.06"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="5dp"
+                android:gravity="end"/>
+    </FrameLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>
