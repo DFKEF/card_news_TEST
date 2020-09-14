@@ -115,7 +115,8 @@
                     android:hint="이름"
                     android:inputType="textPersonName"
                     android:textColor="#fafafa"
-                    android:textColorHint="#FAFAFA" />
+                    android:textColorHint="#FAFAFA"
+                    android:maxLength="4"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -130,6 +131,7 @@
                     android:text="프로필 이미지"
                     android:textSize="15sp"
                     android:layout_gravity="center" />
+
 
                 <Button
                     android:id="@+id/imageButton"

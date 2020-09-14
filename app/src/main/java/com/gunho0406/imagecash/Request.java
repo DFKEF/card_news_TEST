@@ -31,19 +31,28 @@ public class Request extends AppCompatActivity {
     String userID;
     public final String PREFERENCE = "userinfo";
     String user,bitmap,title,date,uId, subject,content;
-    int imgnum;
+    int imgnum,code;
     String sId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        code = intent.getIntExtra("code",0);
         setContentView(R.layout.activity_request);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("요청 중");
+        if(code==9) {
+            toolbar.setTitle("요청 중");
+        }else{
+            toolbar.setTitle("내 뉴스");
+        }
+
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
         SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
         sId = pref.getString("userID","");
+
+
 
         startTask();
 
@@ -76,7 +85,7 @@ public class Request extends AppCompatActivity {
         rview.setAdapter(adapter);
     }
 
-    private void Parse(String result,String sId) throws JSONException {
+    private void Parse(String result,String sId, int code) throws JSONException {
         JSONObject root = new JSONObject(result);
 
         JSONArray ja = root.getJSONArray("result");
@@ -86,18 +95,32 @@ public class Request extends AppCompatActivity {
             JSONObject jo = ja.getJSONObject(i);
             uId = jo.getString("userID");
             String valid = jo.getString("verify");
-            if(valid.equals("N")) {
-                if(uId.equals(sId)){
-                    user = jo.getString("user");
-                    bitmap = url+"cards/"+jo.getString("bitmap");
-                    title = jo.getString("title");
-                    date = jo.getString("date");
-                    subject = jo.getString("subject");
-                    content = jo.getString("content");
-                    imgnum = jo.getInt("imgnum");
-                    list.add(new Item(user,bitmap,title,date,subject,content,imgnum));
-            }
-
+            if(code==9) {
+                if(valid.equals("N")) {
+                    if(uId.equals(sId)){
+                        user = jo.getString("user");
+                        bitmap = url+"cards/"+jo.getString("bitmap");
+                        title = jo.getString("title");
+                        date = jo.getString("date");
+                        subject = jo.getString("subject");
+                        content = jo.getString("content");
+                        imgnum = jo.getInt("imgnum");
+                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum));
+                    }
+                }
+            }else{
+                if(valid.equals("Y")) {
+                    if(uId.equals(sId)){
+                        user = jo.getString("user");
+                        bitmap = url+"cards/"+jo.getString("bitmap");
+                        title = jo.getString("title");
+                        date = jo.getString("date");
+                        subject = jo.getString("subject");
+                        content = jo.getString("content");
+                        imgnum = jo.getInt("imgnum");
+                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum));
+                    }
+                }
             }
         }
     }
@@ -114,7 +137,7 @@ public class Request extends AppCompatActivity {
         String result = task.getResult();
 
         try {
-            Parse(result,sId);
+            Parse(result,sId,code);
         } catch (JSONException e) {
             e.printStackTrace();
         }

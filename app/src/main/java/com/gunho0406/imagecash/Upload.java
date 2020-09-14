@@ -88,14 +88,7 @@ public class Upload extends AppCompatActivity {
         subjectrow = intent.getStringExtra("subject");
         teacher = intent.getStringExtra("teacher");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         Date date = Calendar.getInstance().getTime();
         date_text = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(date);
@@ -116,6 +109,9 @@ public class Upload extends AppCompatActivity {
                 break;
             case "사회" :
                 subject = "society";
+                break;
+            default:
+                subject = "etc";
                 break;
 
         }
@@ -411,6 +407,7 @@ public class Upload extends AppCompatActivity {
             if(data == 9) {
                 Toast.makeText(getApplicationContext(), "선생님께 업로드 요청되었습니다!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context,Request.class);
+                intent.putExtra("code",9);
                 context.startActivity(intent);
                 ((Activity)context).finish();
                 Log.e("설마", String.valueOf(data));
@@ -422,14 +419,6 @@ public class Upload extends AppCompatActivity {
 
         }
     }
-
-    /*Toast.makeText(getApplicationContext(), "선생님께 업로드 요청되었습니다!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(),Request.class);
-                intent.putExtra("title",title);
-                intent.putExtra("content",content);
-                intent.putExtra("list",filelist);
-                startActivity(intent);
-                finish();*/
 
 
 

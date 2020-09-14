@@ -31,7 +31,7 @@ public class Preview extends AppCompatActivity {
     ArrayList<String> bitmaplist = new ArrayList<>();
     ArrayList<Item> list = new ArrayList<>();
     String bitmaprow, bitmap;
-    TextView titletxt, contenttxt;
+    TextView titletxt, contenttxt, contentSub, contentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +57,13 @@ public class Preview extends AppCompatActivity {
 
         titletxt = (TextView) findViewById(R.id.content_title);
         contenttxt = (TextView) findViewById(R.id.content_text);
+        contentSub = (TextView) findViewById(R.id.content_subject);
+        contentUser = (TextView) findViewById(R.id.content_user);
+
         titletxt.setText(title);
         contenttxt.setText(content);
+        contentSub.setText(subject+" | "+date);
+        contentUser.setText(user);
 
         new init().execute();
     }
@@ -77,10 +82,6 @@ public class Preview extends AppCompatActivity {
 
 
     public class init extends AsyncTask<Void,Void,Void> {
-        Context context;
-        //public init(Context context) {
-            //this.context =context;
-        //}
         @Override
         protected Void doInBackground(Void... voids) {
             return null;
@@ -96,45 +97,4 @@ public class Preview extends AppCompatActivity {
             recyclerView.setAdapter(adapter);
         }
     }
-
-    /*public void Thread(final String num) {
-        Thread mThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    URL home = new URL(url+"cards/"+num);
-
-                    // Web에서 이미지를 가져온 뒤
-                    // ImageView에 지정할 Bitmap을 만든다
-                    HttpURLConnection conn = (HttpURLConnection) home.openConnection();
-                    conn.setDoInput(true); // 서버로 부터 응답 수신
-                    conn.connect();
-
-                    InputStream is = conn.getInputStream(); // InputStream 값 가져오기
-                    bitmap = BitmapFactory.decodeStream(is); // Bitmap으로 변환
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        mThread.start(); // Thread 실행
-
-        try {
-            // 메인 Thread는 별도의 작업 Thread가 작업을 완료할 때까지 대기해야한다
-            // join()를 호출하여 별도의 작업 Thread가 종료될 때까지 메인 Thread가 기다리게 한다
-            mThread.join();
-
-            // 작업 Thread에서 이미지를 불러오는 작업을 완료한 뒤
-            // UI 작업을 할 수 있는 메인 Thread에서 ImageView에 이미지를 지정한다filelist.size()
-            bitmaplist.add(bitmap);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }*/
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,12 +25,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class LoginActivity extends AppCompatActivity {
-    String sId, sPw;
+    String sId, sPw, lock_pw;
     String home = "http://192.168.2.2/";
     public final String PREFERENCE = "userinfo";
 
@@ -49,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                 sId = etId.getText().toString();
                 sPw = etPw.getText().toString();
                 bt_Login(v,sId,sPw);
+
             }
         });
 
@@ -96,6 +106,11 @@ public class LoginActivity extends AppCompatActivity {
             this.sPw = sPw;
             this.v = v;
         }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
         @Override
         protected String doInBackground(Void... unused) {
 
@@ -161,6 +176,8 @@ public class LoginActivity extends AppCompatActivity {
             if (data.equals("1")) {
                 Log.e("RESULT", "성공적으로 처리되었습니다!");
 
+
+
                 SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
 
                 // SharedPreferences 의 데이터를 저장/편집 하기위해 Editor 변수를 선언한다.
@@ -179,7 +196,10 @@ public class LoginActivity extends AppCompatActivity {
             } else if (data.equals("0")) {
                 Log.e("RESULT", "비밀번호가 일치하지 않습니다.");
                 Toast.makeText(getApplicationContext(),"아이디나 비밀번호가 일치하지 않습니다.",Toast.LENGTH_LONG).show();
-            } else {
+            } else if(data.equals("3")) {
+                Toast.makeText(getApplicationContext(),"이메일 인증을 해주세요",Toast.LENGTH_LONG).show();
+            }
+            else {
                 Log.e("RESULT", "에러ㅅㅂ 발생! ERRCODE = " + data);
                 Toast.makeText(getApplicationContext(),"아이디나 비밀번호가 일치하지 않습니다.",Toast.LENGTH_LONG).show();
             }

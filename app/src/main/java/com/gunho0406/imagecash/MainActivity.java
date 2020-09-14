@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -31,14 +32,23 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class MainActivity extends AppCompatActivity {
     Context context;
@@ -87,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         if(result == "") {
             Log.e("d","sfd");
             Glide.with(this)
@@ -98,9 +109,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e("profile",result+"_profile.jpg");
             Glide.with(this)
                     .load(url+"profiles/"+profile)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE )
+                    .skipMemoryCache(true)
+                    .centerCrop()
                     .override(50,50)
                     .into(userBtn);
         }
+
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
 
 

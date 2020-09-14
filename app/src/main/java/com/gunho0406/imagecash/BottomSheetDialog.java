@@ -31,8 +31,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_dialog, container,false);
-        msgLo = (LinearLayout) view.findViewById(R.id.msgLo);
-        emailLo = (LinearLayout) view.findViewById(R.id.emailLo);
+        msgLo = (LinearLayout) view.findViewById(R.id.settings);
+        emailLo = (LinearLayout) view.findViewById(R.id.mynews);
         request = (LinearLayout) view.findViewById(R.id.request);
         logout = (LinearLayout) view.findViewById(R.id.quit);
 
@@ -46,14 +46,17 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.msgLo:
+            case R.id.settings:
                 Toast.makeText(getContext(),"Message",Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.emailLo:
-                Toast.makeText(getContext(),"Email",Toast.LENGTH_SHORT).show();
+            case R.id.mynews:
+                Intent init = new Intent(getContext(),Request.class);
+                init.putExtra("code",0);
+                startActivity(init);
                 break;
             case R.id.request:
                 Intent i = new Intent(getContext(),Request.class);
+                i.putExtra("code",9);
                 startActivity(i);
                 break;
             case R.id.quit:
