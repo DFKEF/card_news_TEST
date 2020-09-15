@@ -1,10 +1,10 @@
 package com.gunho0406.imagecash;
 
 public class Item {
-    String user,bitmap,title,date,subject,content;
+    String user,bitmap,title,date,subject,content,getid;
     int imgnum;
 
-    public Item(String user, String bitmap, String title, String date, String subject,String content, int imgnum) {
+    public Item(String user, String bitmap, String title, String date, String subject, String content, int imgnum, String getid) {
         super();
         this.user = user;
         this.bitmap = bitmap;
@@ -13,5 +13,6 @@ public class Item {
         this.subject = subject;
         this.content = content;
         this.imgnum = imgnum;
+        this.getid = getid;
     }
 }

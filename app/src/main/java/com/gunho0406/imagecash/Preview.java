@@ -6,22 +6,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class Preview extends AppCompatActivity {
@@ -45,8 +41,10 @@ public class Preview extends AppCompatActivity {
         bitmaprow = i.getStringExtra("bitmap");
         String subject = i.getStringExtra("subject");
         String content = i.getStringExtra("content");
+        String profile = i.getStringExtra("profile");
+        String getid = i.getStringExtra("id");
         int imgnum = i.getIntExtra("imgnum",0);
-        list.add(new Item(user,bitmaprow,title,date,subject,content,imgnum));
+        list.add(new Item(user,bitmaprow,title,date,subject,content,imgnum, getid));
         for(int j=1; j<=imgnum; j++) {
             bitmap = bitmaprow.replace("_1.jpg","_"+j+".jpg");
             Log.e("dhjdh",bitmap);
@@ -64,6 +62,17 @@ public class Preview extends AppCompatActivity {
         contenttxt.setText(content);
         contentSub.setText(subject+" | "+date);
         contentUser.setText(user);
+
+        ImageView profileimg = (ImageView) findViewById(R.id.profileImg);
+        profileimg.setBackground(new ShapeDrawable(new OvalShape()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            profileimg.setClipToOutline(true);
+        }
+        Glide.with(this)
+                .load(profile)
+                .centerCrop()
+                .override(50,50)
+                .into(profileimg);
 
         new init().execute();
     }

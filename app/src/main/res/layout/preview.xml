@@ -36,14 +36,28 @@
                 android:textColor="#0d0d0d"
                 android:layout_marginHorizontal="30dp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/content_user"
-                android:text="Benjamin Pavard"
-                android:layout_gravity="end"
+                android:orientation="horizontal"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"/>
+                android:layout_marginVertical="10dp"
+                android:layout_gravity="end">
+                <ImageView
+                    android:id="@+id/profileImg"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/hello"
+                    android:scaleType="centerCrop"
+                    android:layout_marginHorizontal="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/content_user"
+                    android:text="Benjamin Pavard" />
+            </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"

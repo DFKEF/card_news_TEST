@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     URLConnector task;
     String userID;
     public final String PREFERENCE = "userinfo";
-    String user,bitmap,title,date,verify,subject, content;
+    String user,bitmap,title,date,verify,subject, content, getid;
     int imgnum;
     ArrayList<String> teacherlist = new ArrayList<>();
     ArrayList<String> subjectlist = new ArrayList<>();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
         context = this;
 
-        init();
+        init(result);
 
         rview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void init(){
+    private void init(String sId){
         rview = (RecyclerView)findViewById(R.id.rview);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context,2);
         rview.setLayoutManager(layoutManager);
@@ -205,8 +205,9 @@ public class MainActivity extends AppCompatActivity {
             subject = jo.getString("subject");
             content = jo.getString("content");
             imgnum = jo.getInt("imgnum");
+            getid = jo.getString("userID");
             if(verify.equals("Y")){
-                list.add(new Item(user,bitmap,title,date,subject,content,imgnum));
+                list.add(new Item(user,bitmap,title,date,subject,content,imgnum,getid));
             }
         }
     }

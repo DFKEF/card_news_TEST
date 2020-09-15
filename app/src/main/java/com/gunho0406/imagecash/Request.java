@@ -3,7 +3,6 @@ package com.gunho0406.imagecash;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -30,7 +29,7 @@ public class Request extends AppCompatActivity {
     URLConnector task;
     String userID;
     public final String PREFERENCE = "userinfo";
-    String user,bitmap,title,date,uId, subject,content;
+    String user,bitmap,title,date,uId, subject,content,getid;
     int imgnum,code;
     String sId;
 
@@ -105,7 +104,8 @@ public class Request extends AppCompatActivity {
                         subject = jo.getString("subject");
                         content = jo.getString("content");
                         imgnum = jo.getInt("imgnum");
-                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum));
+                        getid = jo.getString("userID");
+                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid));
                     }
                 }
             }else{
@@ -118,7 +118,8 @@ public class Request extends AppCompatActivity {
                         subject = jo.getString("subject");
                         content = jo.getString("content");
                         imgnum = jo.getInt("imgnum");
-                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum));
+                        getid = jo.getString("userID");
+                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid));
                     }
                 }
             }

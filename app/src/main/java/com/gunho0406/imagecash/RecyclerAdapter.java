@@ -24,6 +24,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private Context context;
     private ArrayList<Item> list = new ArrayList<Item>();
+    private String sId;
 
     public RecyclerAdapter(Context context, ArrayList<Item> item) {
         this.context = context;
@@ -41,6 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, final int position) {
         String url = list.get(position).bitmap;
         final ArrayList<Item> samplelist = new ArrayList<>();
+        String home = "http://192.168.2.2/";
 
         Glide.with(context)
                 .load(url)
@@ -65,6 +67,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 i.putExtra("subject",list.get(position).subject);
                 i.putExtra("content",list.get(position).content);
                 i.putExtra("imgnum",list.get(position).imgnum);
+                i.putExtra("id",list.get(position).getid);
+                String profile = list.get(position).getid+"_profile.jpg";
+                i.putExtra("profile",home+"profiles/"+profile);
                 context.startActivity(i);
             }
         });
