@@ -1,5 +1,6 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,14 +18,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,30 +35,17 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 public class MainActivity extends AppCompatActivity {
     Context context;
     RecyclerAdapter adapter;
     RecyclerView rview;
     ArrayList<Item> list = new ArrayList<>();
-    String url = "http://192.168.2.2/";
+    String url = "http://13.209.232.72/";
     URLConnector task;
     String userID;
     public final String PREFERENCE = "userinfo";
@@ -84,10 +74,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(result == "") {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    Log.e("d","sfd");
-                    finish();
+                    Bottom bottom = Bottom.getInstance();
+                    bottom.show(getSupportFragmentManager(),"bottom");
                 }else{
                     BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
                     bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
@@ -95,6 +83,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("ㅣㅣㅣ", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Log.e("token",token);
+
+                        // Log and toast
+                    }
+                });
 
 
 

@@ -1,4 +1,4 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 import android.Manifest;
 import android.app.Activity;
@@ -13,8 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -25,18 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
-import android.text.LoginFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -66,7 +60,7 @@ public class Upload extends AppCompatActivity {
     uploadlistadapter adapter;
     RecyclerView recyclerView;
     Context context;
-    String url = "http://192.168.2.2/";
+    String url = "http://13.209.232.72/";
     public final String PREFERENCE = "userinfo";
     int serverResponseCode = 0;
     ArrayList<String> urllist = new ArrayList<>();
@@ -201,7 +195,7 @@ public class Upload extends AppCompatActivity {
                     }else{
                         SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
                         final String sId = pref.getString("userID","");
-                        Parse parse = new Parse(sId,title,content, subject,subjectrow,date_text,date_row);
+                        Parse parse = new Parse(sId,title,content, subject,subjectrow,date_text,date_row,teacher);
                         parse.execute();
                     }
                 }
@@ -325,11 +319,11 @@ public class Upload extends AppCompatActivity {
     public class Parse extends AsyncTask<Void, Integer, Integer> {
 
         String data = "";
-        String sId, title, content,subject,bitmap,subjectrow, date_text, date_row;
+        String sId, title, content,subject,bitmap,subjectrow, date_text, date_row,teacher;
         int imgnum;
         int finishcode = 0;
 
-        public Parse(String sId, String title, String content, String subject, String subjectrow, String date_text, String date_row) {
+        public Parse(String sId, String title, String content, String subject, String subjectrow, String date_text, String date_row, String teacher) {
             this.sId = sId;
             this.title = title;
             this.content = content;
@@ -337,6 +331,7 @@ public class Upload extends AppCompatActivity {
             this.subjectrow = subjectrow;
             this.date_text = date_text;
             this.date_row = date_row;
+            this.teacher = teacher;
         }
         @Override
         protected Integer doInBackground(Void... unused) {
@@ -348,7 +343,7 @@ public class Upload extends AppCompatActivity {
 
             bitmap = sId+"_"+date_text+"_"+subject+"_1.jpg";
 
-            String param = "u_id=" + sId + "&title=" + title + "&date=" + date_row + "&content=" + content + "&bitmap=" + bitmap + "&subject=" + subjectrow + "&imgnum=" + imgnum;
+            String param = "u_id=" + sId + "&title=" + title + "&date=" + date_row + "&content=" + content + "&bitmap=" + bitmap + "&subject=" + subjectrow + "&imgnum=" + imgnum + "&teacher=" + teacher;
             try {
                 // 서버연결
                 URL home = new URL(
@@ -384,12 +379,12 @@ public class Upload extends AppCompatActivity {
                 if(data.equals("0000")) {
                     finishcode = 9;
                     Log.e("RESULT","성공적으로 처리되었습니다!");
-                    Log.e("TEST",sId+title+date_text+bitmap+subject);
+                    Log.e("TEST",sId+title+date_text+bitmap+subject+teacher);
 
                 }
                 else {
                     Log.e("RESULT","에러 발생! ERRCODE = " + data);
-                    Log.e("dd DATA",sId+title+date_text+bitmap+subject);
+                    Log.e("dd DATA",sId+title+date_text+bitmap+subject+teacher);
                 }
 
             } catch (MalformedURLException e) {

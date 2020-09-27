@@ -99,6 +99,12 @@
                     android:inputType="textPersonName"
                     android:textColor="#fafafa"
                     android:textColorHint="#FAFAFA" />
+                <TextView
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign"
+                    android:textSize="15sp"
+                    android:layout_gravity="center" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -117,7 +123,10 @@
                     android:textColor="#fafafa"
                     android:textColorHint="#FAFAFA"
                     android:maxLength="4"/>
+
             </com.google.android.material.textfield.TextInputLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"

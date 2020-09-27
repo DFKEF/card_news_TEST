@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "87018066206",
+    "firebase_url": "https://esan-cardnews.firebaseio.com",
+    "project_id": "esan-cardnews",
+    "storage_bucket": "esan-cardnews.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87018066206:android:b18672f2f86b00d938790f",
+        "android_client_info": {
+          "package_name": "com.gunho0406.esancardnews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87018066206-34k7d9bcb01cgo2cboeiegdlomiq7iiv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8H-UcQ0LYag_XvzAF38UnvypGwHW8Xek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87018066206-34k7d9bcb01cgo2cboeiegdlomiq7iiv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

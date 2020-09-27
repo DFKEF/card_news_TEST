@@ -1,4 +1,4 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 public class Item {
     String user,bitmap,title,date,subject,content,getid;

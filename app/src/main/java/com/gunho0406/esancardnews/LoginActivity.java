@@ -1,8 +1,7 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,13 +27,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 public class LoginActivity extends AppCompatActivity {
     String sId, sPw, lock_pw;
-    String home = "http://192.168.2.2/";
+    String home = "http://13.209.232.72/";
     public final String PREFERENCE = "userinfo";
     ArrayList<Integer> request = new ArrayList<>();
 

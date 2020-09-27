@@ -1,4 +1,4 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -47,7 +46,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.settings:
-                Toast.makeText(getContext(),"Message",Toast.LENGTH_SHORT).show();
+                Intent it = new Intent(getContext(),SettingsActivity.class);
+                startActivity(it);
                 break;
             case R.id.mynews:
                 Intent init = new Intent(getContext(),Request.class);

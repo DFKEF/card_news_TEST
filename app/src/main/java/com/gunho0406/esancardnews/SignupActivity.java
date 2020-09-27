@@ -1,4 +1,4 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,20 +6,16 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -33,25 +29,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 public class SignupActivity extends AppCompatActivity {
     String sId,sPw, sPw_chk,sName, sEmail,lock_pw;
     EditText et_id, et_pw, et_pw_chk,et_email, et_name;
-    String url = "http://192.168.2.2/";
+    String url = "http://13.209.232.72/";
     Context context;
     int serverResponseCode = 0;
     private static final int PICK_FROM_ALBUM = 1;

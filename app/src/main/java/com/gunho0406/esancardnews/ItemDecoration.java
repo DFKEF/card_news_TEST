@@ -1,4 +1,4 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 import android.app.Activity;
 import android.graphics.Rect;

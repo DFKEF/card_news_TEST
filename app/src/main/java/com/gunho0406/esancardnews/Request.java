@@ -1,4 +1,4 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,7 +25,7 @@ public class Request extends AppCompatActivity {
     Context context;
     RecyclerAdapter adapter;
     RecyclerView rview;
-    String url = "http://192.168.2.2/";
+    String url = "http://13.209.232.72/";
     URLConnector task;
     String userID;
     public final String PREFERENCE = "userinfo";

@@ -1,4 +1,4 @@
-package com.gunho0406.imagecash;
+package com.gunho0406.esancardnews;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class Preview extends AppCompatActivity {
     RecyclerView recyclerView;
     Context context;
-    String url = "http://192.168.2.2/";
+    String url = "http://13.209.232.72/";
     ArrayList<String> bitmaplist = new ArrayList<>();
     ArrayList<Item> list = new ArrayList<>();
     String bitmaprow, bitmap;

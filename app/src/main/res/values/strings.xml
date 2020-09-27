@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">imagecash</string>
-    <string name="url">http://192.168.2.2/</string>
+    <string name="app_name">이산고 카드뉴스</string>
+    <string name="url">http://13.209.232.72/</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -11,6 +11,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_upload">업로드 요청</string>
+    <string name="sign">이메일 주소를 정확히 입력해 주세요.\n최초 로그인 시 인증 절차가 있습니다.\nex) esan_00_00000@esan.hs.kr</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -32,4 +33,22 @@ Phasellus tempor nibh odio, at hendrerit nibh interdum et. Cras tellus quam, feu
 
 Aenean consectetur ante a felis tempor, vitae semper mauris bibendum. Morbi urna felis, aliquet sed convallis quis, tincidunt ac massa. Sed sodales elit a orci semper, ac elementum nisl mattis. Duis lectus odio, consectetur a porttitor in, maximus sit amet velit. Ut vitae sagittis urna. Integer sit amet commodo magna. Proin aliquet semper ex. Fusce vel sollicitudin libero, a rhoncus felis. Mauris ullamcorper dolor vel ex congue tincidunt. Nulla facilisi. Sed ac quam et tortor vulputate ultrices sit amet vel mauris. Suspendisse at fringilla erat.</string>
     <string name="email">가입하신 이메일로 인증 코드를 보내드렸습니다.\n 혹시 보이지 않으신다면 스팸함을 확인하여 주십시오.</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="delete">만약 계정에 문제가 생겼다면 계정을 삭제하여 문제를 해결할 수 있습니다.\n단, 계정 삭제 시 게시한 뉴스들은 지워지지 않습니다.\n계정 문제로 재가입 시에는 반드시 동일한 아이디를 사용하여 주세요.</string>
 </resources>
