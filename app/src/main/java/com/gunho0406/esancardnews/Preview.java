@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -68,10 +71,18 @@ public class Preview extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             profileimg.setClipToOutline(true);
         }
+        RequestOptions myOptions = new RequestOptions()
+                .centerCrop()
+                .format(DecodeFormat.PREFER_ARGB_8888);// or centerCrop
+
+
+
         Glide.with(this)
+                .asBitmap()
                 .load(profile)
                 .centerCrop()
-                .override(50,50)
+                .apply(new RequestOptions().override(200, 200))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(profileimg);
 
         new init().execute();

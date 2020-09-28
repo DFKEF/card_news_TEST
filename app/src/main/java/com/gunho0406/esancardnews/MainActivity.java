@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("d","sfd");
             Glide.with(this)
                     .load(R.drawable.ic_baseline_account_circle_24)
-                    .override(50,50)
+                    .override(200,200)
                     .into(userBtn);
         }else{
             String profile = result+"_profile.jpg";
@@ -116,8 +116,10 @@ public class MainActivity extends AppCompatActivity {
                     .load(url+"profiles/"+profile)
                     .diskCacheStrategy(DiskCacheStrategy.NONE )
                     .skipMemoryCache(true)
+                    .error(R.drawable.ic_baseline_account_circle_24)
+                    .fallback(R.drawable.ic_baseline_account_circle_24)
                     .centerCrop()
-                    .override(50,50)
+                    .override(200,200)
                     .into(userBtn);
         }
 

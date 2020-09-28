@@ -80,6 +80,14 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="사진은 800*800 픽셀의 정사각형 사진을 권장합니다."
+                android:layout_marginHorizontal="10dp"
+                android:textAlignment="center"/>
+
 
             <TextView
                 android:id="@+id/textView4"

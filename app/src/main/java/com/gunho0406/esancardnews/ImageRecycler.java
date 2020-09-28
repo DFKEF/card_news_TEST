@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
@@ -45,11 +46,13 @@ public class ImageRecycler extends RecyclerView.Adapter<ImageRecycler.ViewHolder
         //Log.e("pic",url+"cards/"+list.get(position));
         num = bitmaplist.get(position);
         Glide.with(context)
+                .asBitmap()
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .load(num)
-                .diskCacheStrategy(DiskCacheStrategy.NONE )
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .centerCrop()
-                .override(400,400)
+                .override(800,800)
                 .into(holder.imageView);
     }
 
