@@ -51,4 +51,8 @@ Aenean consectetur ante a felis tempor, vitae semper mauris bibendum. Morbi urna
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="delete">만약 계정에 문제가 생겼다면 계정을 삭제하여 문제를 해결할 수 있습니다.\n단, 계정 삭제 시 게시한 뉴스들은 지워지지 않습니다.\n계정 문제로 재가입 시에는 반드시 동일한 아이디를 사용하여 주세요.</string>
+    <string name="title_activity_home">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

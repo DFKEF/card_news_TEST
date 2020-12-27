@@ -22,8 +22,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -377,6 +380,8 @@ public class Account extends AppCompatActivity {
             cursor.close();
         }
 
+        Log.e("resultdd",result);
+
         return result;
     }
 
@@ -443,7 +448,7 @@ public class Account extends AppCompatActivity {
         String boundary = "*****";
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
+        int maxBufferSize = 1000 * 1024 * 1024;
         File sourceFile = new File(sourceFileUri);
 
         if (!sourceFile.isFile()) {
@@ -451,7 +456,7 @@ public class Account extends AppCompatActivity {
 
             runOnUiThread(new Runnable() {
                 public void run() {
-
+                    Log.e("제발제발","asdfasdf");
                 }
             });
 

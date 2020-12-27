@@ -2,6 +2,10 @@ package com.gunho0406.esancardnews;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -33,6 +38,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return new ViewHolder(convertView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, final int position) {
         String url = list.get(position).bitmap;
@@ -45,10 +51,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 .override(600,600)
                 .into(holder.imageView);
 
+        holder.profile.setBackground(new ShapeDrawable(new OvalShape()));
+        holder.profile.setClipToOutline(true);
+        Glide.with(context)
+                .load(home+"profiles/"+list.get(position).getid+"_profile.jpg")
+                .centerCrop()
+                .override(200,200)
+                .into(holder.profile);
+
 
         holder.title.setText(list.get(position).title);
         holder.user.setText(list.get(position).user);
-        holder.date.setText(list.get(position).date);
         holder.subject.setText(list.get(position).subject);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,14 +89,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
-        private TextView title, user, date, subject;
+        private ImageView imageView, profile;
+        private TextView title, user, subject;
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
             user = (TextView) itemView.findViewById(R.id.user);
-            date = (TextView) itemView.findViewById(R.id.date);
+            profile = (ImageView) itemView.findViewById(R.id.profileCard);
             subject = (TextView) itemView.findViewById(R.id.subject);
 
 

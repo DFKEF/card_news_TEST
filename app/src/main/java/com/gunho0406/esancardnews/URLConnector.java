@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-class URLConnector extends Thread {
+public class URLConnector extends Thread {
 
     private String result;
     private String URL;

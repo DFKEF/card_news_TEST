@@ -74,7 +74,7 @@ public class CodeDialog extends Dialog {
                 editor.putString("userID",sId);
                 // 메모리에 있는 데이터를 저장장치에 저장한다.
                 editor.commit();
-                Intent i = new Intent(context,MainActivity.class);
+                Intent i = new Intent(context,HomeActivity.class);
                 context.startActivity(i);
             }else{
                 Toast.makeText(getContext(),"코드가 불일치합니다.",Toast.LENGTH_LONG).show();

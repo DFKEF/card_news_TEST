@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(this,MainActivity.class);
+        Intent i = new Intent(this,HomeActivity.class);
         startActivity(i);
         finish();
     }
@@ -207,7 +207,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.commit();
 
 
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                 i.putExtra("userID",sId);
                 startActivity(i);
                 finish();
@@ -229,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
                 Window window = codeDialog.getWindow();
 
                 int x = (int)(size.x * 0.8f);
-                int y = (int)(size.y * 0.4f);
+                int y = (int)(size.y * 0.5f);
 
 
                 window.setLayout(x, y);
