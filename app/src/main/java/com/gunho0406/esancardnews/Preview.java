@@ -3,6 +3,7 @@ package com.gunho0406.esancardnews;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 
 public class Preview extends AppCompatActivity {
-    RecyclerView recyclerView;
+    ViewPager2 viewpager2;
     Context context;
     String url = "http://13.209.232.72/";
     ArrayList<String> bitmaplist = new ArrayList<>();
@@ -109,12 +110,13 @@ public class Preview extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            recyclerView = (RecyclerView) findViewById(R.id.image_rview);
-            recyclerView.setHasFixedSize(true);
+            viewpager2 = (ViewPager2) findViewById(R.id.image_rview);
+            //viewpager2.setHasFixedSize(true);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
             ImageRecycler adapter = new ImageRecycler(getApplicationContext(),bitmaplist,list);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
+            //viewpager2.setLayoutManager(layoutManager);
+            viewpager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+            viewpager2.setAdapter(adapter);
         }
     }
 }

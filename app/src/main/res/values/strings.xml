@@ -55,4 +55,5 @@ Aenean consectetur ante a felis tempor, vitae semper mauris bibendum. Morbi urna
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="notice">사진은 800*800 픽셀의 정사각형 사진을 권장합니다.\n업로드 시 과목을 잘 선택했는지 확인해주세요.\n업로드 후 변경 시 오류가 발생합니다.</string>
 </resources>

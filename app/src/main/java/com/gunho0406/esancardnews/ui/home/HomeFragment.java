@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class HomeFragment extends Fragment implements View.OnClickListener{
+public class HomeFragment extends Fragment{
 
     RecyclerAdapter adapter;
     RecyclerView rview;
@@ -84,25 +84,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
 
-        final FloatingActionButton fab = root.findViewById(R.id.fab_);
-        fab.setOnClickListener(this);
+
         startTask();
         init(root);
 
-        rview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 || dy < 0 && fab.isShown())
-                    fab.hide();
-            }
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                    fab.show();
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
 
         final SwipeRefreshLayout refreshLayout = root.findViewById(R.id.refreshlayout_);
         refreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -116,7 +101,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 refreshLayout.setRefreshing(false);
             }
         });
-
 
 
 
@@ -209,28 +193,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_ :
-                fabaction();
-                break;
-        }
-    }
 
 
-    public void fabaction() {
-        if(result=="") {
-            Intent intent = new Intent(activity, LoginActivity.class);
-            startActivity(intent);
-            activity.finish();
-        }else {
-            Log.e("teacher",teacherlist.get(0));
-            CustomDialog customDialog = new CustomDialog(activity,teacherlist,subjectlist);
-
-            // 커스텀 다이얼로그를 호출한다.
-            // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
-            customDialog.callFunction();
-        }
-    }
 }

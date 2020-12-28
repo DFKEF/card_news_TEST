@@ -26,6 +26,7 @@ public class ImageRecycler extends RecyclerView.Adapter<ImageRecycler.ViewHolder
     private String url = "http://13.209.232.72/";
     RequestManager mRequestManager;
     String num;
+    Item item;
     public ImageRecycler(Context context, ArrayList<String> bitmaplist, ArrayList<Item> list) {
         this.context = context;
         this.bitmaplist = bitmaplist;
@@ -42,18 +43,21 @@ public class ImageRecycler extends RecyclerView.Adapter<ImageRecycler.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ImageRecycler.ViewHolder holder, int position) {
-        Log.e("position", String.valueOf(position));
-        //Log.e("pic",url+"cards/"+list.get(position));
-        num = bitmaplist.get(position);
-        Glide.with(context)
-                .asBitmap()
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .load(num)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .centerCrop()
-                .override(800,800)
-                .into(holder.imageView);
+
+        if (holder instanceof ViewHolder) {
+            Log.e("position", String.valueOf(position));
+            //Log.e("pic",url+"cards/"+list.get(position));
+            num = bitmaplist.get(position);
+            Glide.with(context)
+                    .asBitmap()
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .load(num)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .centerCrop()
+                    .override(1000, 1000)
+                    .into(holder.imageView);
+        }
     }
 
     @Override
@@ -69,6 +73,7 @@ public class ImageRecycler extends RecyclerView.Adapter<ImageRecycler.ViewHolder
 
         }
     }
+
 
 
 }

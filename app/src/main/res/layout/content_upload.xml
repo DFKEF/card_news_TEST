@@ -17,6 +17,22 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/sub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="과목 선생님 선택"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="20dp"/>
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="10dp"/>
+
+
+            <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,27 +80,32 @@
                         android:id="@+id/addbutton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="추가하기"
+                        android:text="+"
+                        android:textSize="20sp"
                         android:layout_gravity="center"/>
 
-                    <ImageButton
-                        android:id="@+id/uploadbutton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="end|center_horizontal"
-                        android:src="@drawable/ic_baseline_cloud_upload_24"
-                        style="@style/Widget.AppCompat.Button.Small"/>
                 </FrameLayout>
 
 
 
             </LinearLayout>
 
+
+            <Button
+                android:id="@+id/uploadbutton"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end|center_horizontal"
+                android:text="Upload"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:background="@drawable/roundbtn"
+                android:layout_marginRight="10dp" />
+
             <TextView
                 android:id="@+id/help"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="사진은 800*800 픽셀의 정사각형 사진을 권장합니다."
+                android:text="@string/notice"
                 android:layout_marginHorizontal="10dp"
                 android:textAlignment="center"/>
 
@@ -106,7 +127,15 @@
                 android:inputType="textMultiLine"
                 android:background="@drawable/edittext_rec"
                 android:layout_margin="10dp"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:hint="내용을 입력하세요"/>
+
+            <Button
+                android:id="@+id/sendbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="제출하기"
+                android:background="@drawable/button"/>
 
         </LinearLayout>
     </ScrollView>

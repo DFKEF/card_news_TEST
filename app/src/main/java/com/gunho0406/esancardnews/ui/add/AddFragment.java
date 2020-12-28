@@ -1,4 +1,4 @@
-package com.gunho0406.esancardnews;
+package com.gunho0406.esancardnews.ui.add;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,26 +12,42 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+import com.gunho0406.esancardnews.CustomDialog;
+import com.gunho0406.esancardnews.LoginActivity;
+import com.gunho0406.esancardnews.R;
+import com.gunho0406.esancardnews.Request;
+import com.gunho0406.esancardnews.URLConnector;
+import com.gunho0406.esancardnews.Upload;
+import com.gunho0406.esancardnews.uploadlistadapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -50,81 +66,117 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.content.Context.MODE_PRIVATE;
 
-public class Upload extends AppCompatActivity {
+public class AddFragment extends Fragment {
+
+    private AddViewModel addViewModel;
     ArrayList<String> filelist = new ArrayList<>();
     ArrayList<File> file_cur = new ArrayList<File>();
     private static final int PICK_FROM_ALBUM = 1;
     File tempFile;
     String fileurl;
+    URLConnector task;
     uploadlistadapter adapter;
     RecyclerView recyclerView;
-    Context context;
     String url = "http://13.209.232.72/";
     public final String PREFERENCE = "userinfo";
     int serverResponseCode = 0;
     ArrayList<String> urllist = new ArrayList<>();
     String subjectrow, subject, teacher;
     String date_text, date_row;
-
-
-
+    Activity activity;
+    ArrayList<String> teacherlist = new ArrayList<>();
+    ArrayList<String> subjectlist = new ArrayList<>();
+    View root;
+    int isChecked = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity)
+            activity = (Activity) context;
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        addViewModel =
+                ViewModelProviders.of(this).get(AddViewModel.class);
+        root = inflater.inflate(R.layout.fragment_add, container, false);
         tedPermission();
-        Intent intent = getIntent();
+        Intent intent = activity.getIntent();
         subjectrow = intent.getStringExtra("subject");
         teacher = intent.getStringExtra("teacher");
 
-        SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+        SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, MODE_PRIVATE);
         final String res = pref.getString("userID", "");
         Log.e("res",res);
 
         if (res.isEmpty()) {
-            Intent in = new Intent(this, LoginActivity.class);
+            Intent in = new Intent(activity, LoginActivity.class);
             startActivity(in);
         } else {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
             Date date = Calendar.getInstance().getTime();
             date_text = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(date);
             date_row = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date);
 
-            switch (subjectrow) {
-                case "국어":
-                    subject = "korean";
-                    break;
-                case "수학":
-                    subject = "math";
-                    break;
-                case "영어":
-                    subject = "english";
-                    break;
-                case "과학":
-                    subject = "science";
-                    break;
-                case "사회":
-                    subject = "society";
-                    break;
-                default:
-                    subject = "etc";
-                    break;
 
+            startTeachers();
+            ArrayList<String> list = new ArrayList<>();
+            for(int i= 0; i<subjectlist.size(); i++) {
+                list.add(subjectlist.get(i)+"/"+teacherlist.get(i));
+                Log.e("나나",list.get(i));
             }
+            final Spinner selectTeacher = (Spinner) root.findViewById(R.id.spinner2);
+            ArrayAdapter adapter = new ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, list);
+            selectTeacher.setAdapter(adapter);
+            selectTeacher.setSelection(0);
+            selectTeacher.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    subjectrow = subjectlist.get(position);
+                    teacher = teacherlist.get(position);
+                    switch (subjectrow) {
+                        case "국어":
+                            subject = "korean";
+                            break;
+                        case "수학" :
+                            subject = "math";
+                            break;
+                        case "영어" :
+                            subject = "english";
+                            break;
+                        case "과학" :
+                            subject = "science";
+                            break;
+                        case "사회" :
+                            subject = "society";
+                            break;
+                        default:
+                            subject = "etc";
+                            break;
 
-            context = this;
+                    }
+                    isChecked = 9;
+                }
 
-            init();
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            init(root);
 
 
-            Button uploadbutton = (Button) findViewById(R.id.addbutton);
+
+
+
+            Button uploadbutton = (Button) root.findViewById(R.id.addbutton);
             uploadbutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -133,13 +185,13 @@ public class Upload extends AppCompatActivity {
             });
 
 
-            Button uploadbtn = (Button) findViewById(R.id.uploadbutton);
+            Button uploadbtn = (Button) root.findViewById(R.id.uploadbutton);
             uploadbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new Thread(new Runnable() {
                         public void run() {
-                            SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+                            SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, MODE_PRIVATE);
                             final String sId = pref.getString("userID", "");
                             for (int i = 0; i < filelist.size(); i++) {
                                 int j = i + 1;
@@ -152,12 +204,55 @@ public class Upload extends AppCompatActivity {
             });
 
         }
+
+        Button sendbtn = (Button) root.findViewById(R.id.sendbtn);
+        sendbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editTitle = (EditText) root.findViewById(R.id.editTitle);
+                EditText editContent = (EditText) root.findViewById(R.id.editContent);
+                final String title = editTitle.getText().toString();
+                final String content = editContent.getText().toString();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                builder.setTitle("검토").setMessage("제목 : "+title+"\n과목 : "+subjectrow+"/"+teacher+"이 맞습니까?");
+
+                builder.setPositiveButton("네", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        if(title.isEmpty()||urllist.isEmpty()) {
+                            Toast.makeText(activity,"사진 업로드 또는 제목을 입력해주세요",Toast.LENGTH_SHORT).show();
+                        }else if(isChecked==0) {
+                            Toast.makeText(activity,"선생님이 올바르지 않습니다.",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+                            final String sId = pref.getString("userID","");
+                            AddFragment.Parse parse = new AddFragment.Parse(sId,title,content, subject,subjectrow,date_text,date_row,teacher);
+                            parse.execute();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("아니요", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(activity, "다시 확인해주세요", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+        return root;
     }
 
-    private void init() {
-        recyclerView = (RecyclerView) findViewById(R.id.uploadview);
-        uploadlistadapter adapter = new uploadlistadapter(context,filelist);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+    private void init(View root) {
+        recyclerView = (RecyclerView) root.findViewById(R.id.uploadview);
+        uploadlistadapter adapter = new uploadlistadapter(activity,filelist);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
@@ -168,69 +263,15 @@ public class Upload extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_upload, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        EditText editTitle = (EditText) findViewById(R.id.editTitle);
-        EditText editContent = (EditText)findViewById(R.id.editContent);
-        final String title = editTitle.getText().toString();
-        final String content = editContent.getText().toString();
-        int id = item.getItemId();
 
 
-
-
-        //noinspection SimplifiableIfStatement
-        if(id==R.id.next){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setTitle("검토").setMessage("제목 : "+title+"\n과목 : "+subject+"/"+teacher+"이 맞습니까?");
-
-            builder.setPositiveButton("네", new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    if(title.isEmpty()||urllist.isEmpty()) {
-                        Toast.makeText(getApplicationContext(),"사진 업로드 또는 제목을 입력해주세요",Toast.LENGTH_SHORT).show();
-                    }else{
-                        SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
-                        final String sId = pref.getString("userID","");
-                        Parse parse = new Parse(sId,title,content, subject,subjectrow,date_text,date_row,teacher);
-                        parse.execute();
-                    }
-                }
-            });
-
-            builder.setNegativeButton("아니요", new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int id)
-                {
-                    Toast.makeText(getApplicationContext(), "다시 확인해주세요", Toast.LENGTH_SHORT).show();
-                }
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
 
 
 
     private String getRealPathFromURI(Uri contentURI) {
 
         String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        Cursor cursor = activity.getContentResolver().query(contentURI, null, null, null, null);
 
         if (cursor == null) { // Source is Dropbox or other similar local file path
             result = contentURI.getPath();
@@ -260,7 +301,7 @@ public class Upload extends AppCompatActivity {
             }
         };
 
-        TedPermission.with(this)
+        TedPermission.with(activity)
                 .setPermissionListener(permissionListener)
                 .setRationaleMessage(getResources().getString(R.string.permission_2))
                 .setDeniedMessage(getResources().getString(R.string.permission_1))
@@ -278,7 +319,7 @@ public class Upload extends AppCompatActivity {
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_FROM_ALBUM) {
@@ -299,7 +340,7 @@ public class Upload extends AppCompatActivity {
                     String[] proj = {MediaStore.Images.Media.DATA};
 
                     assert photoUri != null;
-                    cursor = getContentResolver().query(photoUri, proj, null, null, null);
+                    cursor = activity.getContentResolver().query(photoUri, proj, null, null, null);
 
                     assert cursor != null;
                     int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -310,7 +351,7 @@ public class Upload extends AppCompatActivity {
                     fileurl = getRealPathFromURI(photoUri);
                     String title = fileurl.replace("/storage/emulated/0/", "");
                     filelist.add(title);
-                    init();
+                    init(root);
 
                 } finally {
                     if (cursor != null) {
@@ -341,13 +382,9 @@ public class Upload extends AppCompatActivity {
             this.date_row = date_row;
             this.teacher = teacher;
         }
-
-
         @Override
         protected Integer doInBackground(Void... unused) {
             //인풋 파라메터값 생성
-
-
             Date date = Calendar.getInstance().getTime();
             Log.d("webnautes", date_text);
             imgnum = urllist.size();
@@ -412,15 +449,15 @@ public class Upload extends AppCompatActivity {
         protected void onPostExecute(Integer data) {
             super.onPostExecute(data);
             if(data == 9) {
-                Toast.makeText(getApplicationContext(), "선생님께 업로드 요청되었습니다!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context,Request.class);
+                Toast.makeText(activity, "선생님께 업로드 요청되었습니다!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(activity, Request.class);
                 intent.putExtra("code",9);
-                context.startActivity(intent);
-                ((Activity)context).finish();
+                activity.startActivity(intent);
+                activity.finish();
                 Log.e("설마", String.valueOf(data));
             }else{
                 Log.e("dd", String.valueOf(data));
-                Toast.makeText(context,"에러 발생!",Toast.LENGTH_LONG).show();
+                Toast.makeText(activity,"에러 발생!",Toast.LENGTH_LONG).show();
                 super.onPostExecute(data);
             }
 
@@ -447,7 +484,7 @@ public class Upload extends AppCompatActivity {
         if (!sourceFile.isFile()) {
 
 
-            runOnUiThread(new Runnable() {
+            activity.runOnUiThread(new Runnable() {
                 public void run() {
 
                 }
@@ -515,10 +552,10 @@ public class Upload extends AppCompatActivity {
 
                 if(serverResponseCode == 200){
 
-                    runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         public void run() {
 
-                            Toast.makeText(Upload.this, "사진 업로드가 완료되었습니다.",
+                            Toast.makeText(activity, "사진 업로드가 완료되었습니다.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -534,9 +571,9 @@ public class Upload extends AppCompatActivity {
 
                 ex.printStackTrace();
 
-                runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(Upload.this, "에러 발생!",
+                        Toast.makeText(activity, "에러 발생!",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -545,9 +582,9 @@ public class Upload extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
 
-                runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(Upload.this, "Got Exception : see logcat ",
+                        Toast.makeText(activity, "Got Exception : see logcat ",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -559,5 +596,38 @@ public class Upload extends AppCompatActivity {
         } // End else block
     }
 
+    private void startTeachers(){
+        task = new URLConnector(url+"teacher.php");
+        task.start();
+        try{
+            task.join();
+        }
+        catch(InterruptedException e){
 
+        }
+        String result = task.getResult();
+
+        try {
+            Teachers(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void Teachers(String result) throws JSONException {
+        JSONObject root = new JSONObject(result);
+
+        JSONArray ja = root.getJSONArray("result");
+
+        for(int i = 0; i < ja.length();i++)
+        {
+            String ver;
+            JSONObject jo = ja.getJSONObject(i);
+            ver = jo.getString("verify");
+            if(ver.equals("Y")){
+                teacherlist.add(jo.getString("name"));
+                subjectlist.add(jo.getString("subject"));
+            }
+        }
+    }
 }

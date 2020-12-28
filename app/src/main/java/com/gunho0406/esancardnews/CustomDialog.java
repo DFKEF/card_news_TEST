@@ -2,7 +2,6 @@ package com.gunho0406.esancardnews;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -26,7 +25,6 @@ public class CustomDialog {
         this.teacherlist = teacherlist;
         this.subjectlist = subjectlist;
     }
-
     // 호출할 다이얼로그 함수를 정의한다.
     public void callFunction() {
 
@@ -67,10 +65,9 @@ public class CustomDialog {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context.getApplicationContext(),Upload.class);
-                intent.putExtra("subject",subject);
-                intent.putExtra("teacher",teacher);
-                context.startActivity(intent);
+                ArrayList<String> hello = new ArrayList<>();
+                hello.add(subject);
+                hello.add(teacher);
                 dlg.dismiss();
             }
         });
