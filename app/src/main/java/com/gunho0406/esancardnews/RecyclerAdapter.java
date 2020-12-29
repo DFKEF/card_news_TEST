@@ -63,6 +63,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.title.setText(list.get(position).title);
         holder.user.setText(list.get(position).user);
         holder.subject.setText(list.get(position).subject);
+        Log.e("num", String.valueOf(list.get(position).like_count));
+        holder.like_num.setText(String.valueOf(list.get(position).like_count));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +78,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 i.putExtra("content",list.get(position).content);
                 i.putExtra("imgnum",list.get(position).imgnum);
                 i.putExtra("id",list.get(position).getid);
+                i.putExtra("like_count",list.get(position).like_count);
                 String profile = list.get(position).getid+"_profile.jpg";
                 i.putExtra("profile",home+"profiles/"+profile);
                 context.startActivity(i);
@@ -90,7 +93,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView, profile;
-        private TextView title, user, subject;
+        private TextView title, user, subject, like_num;
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
@@ -98,7 +101,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             user = (TextView) itemView.findViewById(R.id.user);
             profile = (ImageView) itemView.findViewById(R.id.profileCard);
             subject = (TextView) itemView.findViewById(R.id.subject);
-
+            like_num = (TextView) itemView.findViewById(R.id.likenum);
 
         }
     }

@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment{
     String userID;
     public final String PREFERENCE = "userinfo";
     String user,bitmap,title,date,verify,subject, content, getid;
-    int imgnum;
+    int imgnum,like_num;
     ArrayList<String> teacherlist = new ArrayList<>();
     ArrayList<String> subjectlist = new ArrayList<>();
 
@@ -134,8 +134,9 @@ public class HomeFragment extends Fragment{
             content = jo.getString("content");
             imgnum = jo.getInt("imgnum");
             getid = jo.getString("userID");
+            like_num = jo.getInt("like_count");
             if(verify.equals("Y")){
-                list.add(new Item(user,bitmap,title,date,subject,content,imgnum,getid));
+                list.add(new Item(user,bitmap,title,date,subject,content,imgnum,getid,like_num));
             }
         }
     }

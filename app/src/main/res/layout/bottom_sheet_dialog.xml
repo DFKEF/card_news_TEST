@@ -4,29 +4,6 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/mynews"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:clickable="true"
-        android:background="?attr/selectableItemBackground"
-        >
-        <ImageView
-            android:src="@drawable/ic_baseline_menu_book_24"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:layout_marginLeft="8dp"
-            />
-        <TextView
-            android:text="내 뉴스"
-            android:textColor="#838383"
-            android:textSize="16sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
         android:id="@+id/request"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -36,7 +13,7 @@
         android:background="?attr/selectableItemBackground"
         >
         <ImageView
-            android:src="@drawable/ic_baseline_folder_24"
+            android:src="@drawable/ic_baseline_menu_book_24"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="12dp"

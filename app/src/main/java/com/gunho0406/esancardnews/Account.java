@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -74,6 +75,8 @@ public class Account extends AppCompatActivity {
         Intent i = getIntent();
         String id = i.getStringExtra("ID");
         idlist.add(id);
+        TextView idtext = (TextView) findViewById(R.id.accountid);
+        idtext.setText(id);
         final EditText txtEdit = new EditText(this);
         txtEdit.setInputType(0x00000081);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);

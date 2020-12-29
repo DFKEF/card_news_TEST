@@ -1,4 +1,4 @@
-package com.gunho0406.esancardnews.ui.dashboard;
+package com.gunho0406.esancardnews.ui.popular;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.gunho0406.esancardnews.R;
 
-public class DashboardFragment extends Fragment {
+public class PopularFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
+    private PopularViewModel popularViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        popularViewModel =
+                ViewModelProviders.of(this).get(PopularViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_popular, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        popularViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

@@ -29,10 +29,10 @@
         android:text="아이디"
         android:padding="10dp"/>
     <TextView
-        android:id="@+id/id"
+        android:id="@+id/accountid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="gunho0406"
+        android:text="ID"
         android:paddingHorizontal="15dp"
         android:textColor="@color/design_default_color_on_secondary"/>
 

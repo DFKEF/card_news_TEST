@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.gunho0406.esancardnews.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_popular"
+        android:name="com.gunho0406.esancardnews.ui.popular.PopularFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_popular" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.gunho0406.esancardnews.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_search"
+        android:name="com.gunho0406.esancardnews.ui.search.SearchFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 

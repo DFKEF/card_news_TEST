@@ -30,7 +30,7 @@ public class Request extends AppCompatActivity {
     String userID;
     public final String PREFERENCE = "userinfo";
     String user,bitmap,title,date,uId, subject,content,getid;
-    int imgnum,code;
+    int imgnum,code,like_count;
     String sId;
 
     @Override
@@ -105,7 +105,8 @@ public class Request extends AppCompatActivity {
                         content = jo.getString("content");
                         imgnum = jo.getInt("imgnum");
                         getid = jo.getString("userID");
-                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid));
+                        like_count = jo.getInt("like_count");
+                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid,like_count));
                     }
                 }
             }else{
@@ -119,7 +120,8 @@ public class Request extends AppCompatActivity {
                         content = jo.getString("content");
                         imgnum = jo.getInt("imgnum");
                         getid = jo.getString("userID");
-                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid));
+                        like_count = jo.getInt("like_count");
+                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid,like_count));
                     }
                 }
             }

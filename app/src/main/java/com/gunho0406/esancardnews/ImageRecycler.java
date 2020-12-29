@@ -43,21 +43,18 @@ public class ImageRecycler extends RecyclerView.Adapter<ImageRecycler.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ImageRecycler.ViewHolder holder, int position) {
-
-        if (holder instanceof ViewHolder) {
             Log.e("position", String.valueOf(position));
             //Log.e("pic",url+"cards/"+list.get(position));
             num = bitmaplist.get(position);
             Glide.with(context)
                     .asBitmap()
                     .format(DecodeFormat.PREFER_ARGB_8888)
-                    .load(num)
+                    .load(num).placeholder(R.drawable.loading)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .centerCrop()
                     .override(1000, 1000)
                     .into(holder.imageView);
-        }
     }
 
     @Override

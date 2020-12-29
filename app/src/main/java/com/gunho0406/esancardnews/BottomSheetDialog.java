@@ -31,12 +31,12 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_dialog, container,false);
         msgLo = (LinearLayout) view.findViewById(R.id.settings);
-        emailLo = (LinearLayout) view.findViewById(R.id.mynews);
+        //emailLo = (LinearLayout) view.findViewById(R.id.mynews);
         request = (LinearLayout) view.findViewById(R.id.request);
         logout = (LinearLayout) view.findViewById(R.id.quit);
 
         msgLo.setOnClickListener(this);
-        emailLo.setOnClickListener(this);
+        //emailLo.setOnClickListener(this);
         request.setOnClickListener(this);
         logout.setOnClickListener(this);
         return view;
@@ -49,11 +49,11 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 Intent it = new Intent(getContext(),SettingsActivity.class);
                 startActivity(it);
                 break;
-            case R.id.mynews:
+            /*case R.id.mynews:
                 Intent init = new Intent(getContext(),Request.class);
                 init.putExtra("code",0);
                 startActivity(init);
-                break;
+                break;*/
             case R.id.request:
                 Intent i = new Intent(getContext(),Request.class);
                 i.putExtra("code",9);

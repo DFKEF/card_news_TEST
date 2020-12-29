@@ -2,6 +2,7 @@ package com.gunho0406.esancardnews.ui.mypage;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -23,8 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gunho0406.esancardnews.Item;
 import com.gunho0406.esancardnews.ItemDecoration;
+import com.gunho0406.esancardnews.LoginActivity;
 import com.gunho0406.esancardnews.R;
 import com.gunho0406.esancardnews.RecyclerAdapter;
 import com.gunho0406.esancardnews.URLConnector;
@@ -49,7 +52,7 @@ public class MyPageFragment extends Fragment {
     String userID;
     public final String PREFERENCE = "userinfo";
     String user,bitmap,title,date,uId, subject,content,getid;
-    int imgnum;
+    int imgnum,like_count;
     String sId;
     Activity activity;
     View root;
@@ -70,9 +73,13 @@ public class MyPageFragment extends Fragment {
                 ViewModelProviders.of(this).get(MyPageViewModel.class);
         root = inflater.inflate(R.layout.fragment_mypage, container, false);
         SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, MODE_PRIVATE);
-        sId = pref.getString("userID","");
+        sId = pref.getString("userID", "");
+        if (sId.isEmpty()) {
+            Intent in = new Intent(activity, LoginActivity.class);
+            startActivity(in);
+        } else{
 
-        TextView name = (TextView) root.findViewById(R.id.myname);
+            TextView name = (TextView) root.findViewById(R.id.myname);
         ImageView profile = (ImageView) root.findViewById(R.id.myprofile);
         profile.setBackground(new ShapeDrawable(new OvalShape()));
         profile.setClipToOutline(true);
@@ -83,9 +90,11 @@ public class MyPageFragment extends Fragment {
         init(root);
         name.setText(user);
         Glide.with(activity)
-                .load(home+"profiles/"+sId+"_profile.jpg")
+                .load(home + "profiles/" + sId + "_profile.jpg")
                 .centerCrop()
-                .override(500,500)
+                .override(500, 500)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(profile);
 
         final SwipeRefreshLayout refreshLayout = root.findViewById(R.id.rflayout_request);
@@ -100,6 +109,8 @@ public class MyPageFragment extends Fragment {
                 refreshLayout.setRefreshing(false);
             }
         });
+
+        }
         return root;
     }
 
@@ -133,7 +144,8 @@ public class MyPageFragment extends Fragment {
                         content = jo.getString("content");
                         imgnum = jo.getInt("imgnum");
                         getid = jo.getString("userID");
-                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid));
+                        like_count = jo.getInt("like_count");
+                        list.add(new Item(user,bitmap,title,date,subject,content,imgnum, getid,like_count));
                     }
                 }
         }
