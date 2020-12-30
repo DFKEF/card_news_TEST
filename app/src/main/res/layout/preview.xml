@@ -36,6 +36,15 @@
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginVertical="10dp"
                     android:layout_gravity="center_vertical|end" >
+
+                    <ImageButton
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/pen"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:id="@+id/modifybtn"
+                        android:clickable="true"/>
+
                     <ImageButton
                         android:layout_width="35dp"
                         android:layout_height="35dp"

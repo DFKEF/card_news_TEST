@@ -160,6 +160,15 @@ public class AddFragment extends Fragment {
                         case "사회" :
                             subject = "society";
                             break;
+                        case "역사" :
+                            subject = "history";
+                            break;
+                        case "예체능" :
+                            subject = "art";
+                            break;
+                        case "제2외국어" :
+                            subject = "foreign";
+                            break;
                         default:
                             subject = "etc";
                             break;

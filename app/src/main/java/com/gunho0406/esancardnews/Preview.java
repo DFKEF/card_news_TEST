@@ -54,7 +54,7 @@ public class Preview extends AppCompatActivity {
     String bitmaprow, bitmap, sId, bool,code;
     TextView titletxt, contenttxt, contentSub, contentUser, liketxt;
     CheckBox likebox;
-    ImageButton deletebtn;
+    ImageButton deletebtn, modifybtn;
     int like_count;
     public final String PREFERENCE = "user_isliked";
 
@@ -95,6 +95,7 @@ public class Preview extends AppCompatActivity {
         contentUser = (TextView) findViewById(R.id.content_user);
         liketxt = (TextView) findViewById(R.id.previewlike);
         deletebtn = (ImageButton) findViewById(R.id.deletebtn);
+        modifybtn = (ImageButton) findViewById(R.id.modifybtn);
 
         titletxt.setText(title);
         contenttxt.setText(content);
@@ -154,8 +155,10 @@ public class Preview extends AppCompatActivity {
 
         if(sId.equals(getid)) {
             deletebtn.setVisibility(View.VISIBLE);
+            modifybtn.setVisibility(View.VISIBLE);
         }else{
             deletebtn.setVisibility(View.GONE);
+            modifybtn.setVisibility(View.GONE);
         }
 
         deletebtn.setOnClickListener(new View.OnClickListener() {
@@ -188,6 +191,15 @@ public class Preview extends AppCompatActivity {
             }
         });
 
+        modifybtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(Preview.this,Modify.class);
+                in.putExtra("content",content);
+                in.putExtra("title",title);
+                startActivity(in);
+            }
+        });
 
 
 
