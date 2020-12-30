@@ -115,10 +115,11 @@ public class Preview extends AppCompatActivity {
 
         Glide.with(this)
                 .asBitmap()
-                .load(profile)
+                .load(profile).placeholder(R.drawable.ic_baseline_account_circle_24)
                 .centerCrop()
                 .apply(new RequestOptions().override(200, 200))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(profileimg);
 
         likebox.setOnClickListener(new View.OnClickListener() {

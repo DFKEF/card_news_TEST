@@ -50,8 +50,6 @@ public class ImageRecycler extends RecyclerView.Adapter<ImageRecycler.ViewHolder
                     .asBitmap()
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .load(num).placeholder(R.drawable.loading)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
                     .centerCrop()
                     .override(1000, 1000)
                     .into(holder.imageView);

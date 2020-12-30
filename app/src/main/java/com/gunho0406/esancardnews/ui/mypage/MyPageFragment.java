@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -69,6 +71,9 @@ public class MyPageFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        Toolbar toolbar = activity.findViewById(R.id.toolbar_);
+        toolbar.setTitle("마이페이지");
+        toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
         myPageViewModel =
                 ViewModelProviders.of(this).get(MyPageViewModel.class);
         root = inflater.inflate(R.layout.fragment_mypage, container, false);
@@ -90,7 +95,7 @@ public class MyPageFragment extends Fragment {
         init(root);
         name.setText(user);
         Glide.with(activity)
-                .load(home + "profiles/" + sId + "_profile.jpg")
+                .load(home + "profiles/" + sId + "_profile.jpg").placeholder(R.drawable.ic_baseline_account_circle_24)
                 .centerCrop()
                 .override(500, 500)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

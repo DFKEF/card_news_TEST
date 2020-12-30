@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -108,6 +109,9 @@ public class AddFragment extends Fragment {
         Intent intent = activity.getIntent();
         subjectrow = intent.getStringExtra("subject");
         teacher = intent.getStringExtra("teacher");
+        Toolbar toolbar = activity.findViewById(R.id.toolbar_);
+        toolbar.setTitle("업로드");
+        toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
 
         SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, MODE_PRIVATE);
         final String res = pref.getString("userID", "");

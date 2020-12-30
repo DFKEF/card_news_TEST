@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -54,9 +55,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.profile.setBackground(new ShapeDrawable(new OvalShape()));
         holder.profile.setClipToOutline(true);
         Glide.with(context)
-                .load(home+"profiles/"+list.get(position).getid+"_profile.jpg")
+                .load(home+"profiles/"+list.get(position).getid+"_profile.jpg").placeholder(R.drawable.ic_baseline_account_circle_24)
                 .centerCrop()
                 .override(200,200)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(holder.profile);
 
 
