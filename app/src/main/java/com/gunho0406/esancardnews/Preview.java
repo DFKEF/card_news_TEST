@@ -55,6 +55,7 @@ public class Preview extends AppCompatActivity {
     TextView titletxt, contenttxt, contentSub, contentUser, liketxt;
     CheckBox likebox;
     ImageButton deletebtn, modifybtn;
+    String bitmap_data;
     int like_count;
     public final String PREFERENCE = "user_isliked";
 
@@ -80,7 +81,7 @@ public class Preview extends AppCompatActivity {
             Log.e("dhjdh",bitmap);
             bitmaplist.add(bitmap);
         }
-
+        bitmap_data = list.get(0).bitmap.replaceAll("http://13.209.232.72/cards/","");
         code = bitmaprow.replace("http://13.209.232.72/cards/","");
 
         SharedPreferences pref = getSharedPreferences("userinfo", MODE_PRIVATE);
@@ -197,6 +198,7 @@ public class Preview extends AppCompatActivity {
                 Intent in = new Intent(Preview.this,Modify.class);
                 in.putExtra("content",content);
                 in.putExtra("title",title);
+                in.putExtra("bitmap",bitmap_data);
                 startActivity(in);
             }
         });
