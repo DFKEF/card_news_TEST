@@ -112,7 +112,14 @@ public class PopularFragment extends Fragment {
 
         JSONArray ja = root.getJSONArray("result");
 
-        for(int i = 0; i < ja.length();i++)
+        int length = 0;
+        if(ja.length()<=20) {
+            length = ja.length();
+        }else {
+            length = 20;
+        }
+
+        for(int i = 0; i < length ;i++)
         {
             JSONObject jo = ja.getJSONObject(i);
             user = jo.getString("user");
@@ -158,7 +165,14 @@ public class PopularFragment extends Fragment {
 
         JSONArray ja = root.getJSONArray("result");
 
-        for(int i = 0; i < ja.length();i++)
+        int length = 0;
+        if(ja.length()<=20) {
+            length = ja.length();
+        }else {
+            length = 20;
+        }
+
+        for(int i = 0; i < length;i++)
         {
             JSONObject jo = ja.getJSONObject(i);
             user = jo.getString("user");
@@ -205,7 +219,14 @@ public class PopularFragment extends Fragment {
 
         JSONArray ja = root.getJSONArray("result");
 
-        for(int i = 0; i < ja.length();i++)
+        int length = 0;
+        if(ja.length()<=20) {
+            length = ja.length();
+        }else {
+            length = 20;
+        }
+
+        for(int i = 0; i < length;i++)
         {
             JSONObject jo = ja.getJSONObject(i);
             user = jo.getString("user");
