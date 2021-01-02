@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">이산고 카드뉴스</string>
+    <string name="app_name">카드뉴스</string>
     <string name="url">http://13.209.232.72/</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
@@ -11,7 +11,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_upload">업로드 요청</string>
-    <string name="sign">이메일 주소를 정확히 입력해 주세요.\n최초 로그인 시 인증 절차가 있습니다.\nex) esan_00_00000@esan.hs.kr</string>
+    <string name="sign">이메일 주소를 정확히 입력해 주세요.\n최초 로그인 시 인증 절차가 있습니다.\nex) esan00_00000@esan.hs.kr</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

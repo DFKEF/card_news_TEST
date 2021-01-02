@@ -532,7 +532,7 @@ public class Account extends AppCompatActivity {
                             Toast.makeText(Account.this, "사진 업로드가 완료되었습니다.",
                                     Toast.LENGTH_SHORT).show();
                             Button button = (Button) findViewById(R.id.imageButton);
-                            button.setText("선택 완료");
+                            button.setText("업로드 완료되었습니다.");
                         }
                     });
                 }

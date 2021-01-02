@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -57,6 +66,8 @@ public class MyPageFragment extends Fragment {
     int imgnum,like_count;
     String sId;
     Activity activity;
+    TextView name;
+    String nameres;
     View root;
     String home = "http://13.209.232.72/";
 
@@ -83,17 +94,21 @@ public class MyPageFragment extends Fragment {
             Intent in = new Intent(activity, LoginActivity.class);
             startActivity(in);
         } else{
-
-            TextView name = (TextView) root.findViewById(R.id.myname);
+            TextView myID = (TextView) root.findViewById(R.id.myID);
+            myID.setText(sId);
+        name = (TextView) root.findViewById(R.id.myname);
         ImageView profile = (ImageView) root.findViewById(R.id.myprofile);
         profile.setBackground(new ShapeDrawable(new OvalShape()));
         profile.setClipToOutline(true);
 
         startTask();
+        getName getName = new getName(sId);
+        getName.execute();
 
+        //name.setText(nameres);
 
         init(root);
-        name.setText(user);
+
         Glide.with(activity)
                 .load(home + "profiles/" + sId + "_profile.jpg").placeholder(R.drawable.ic_baseline_account_circle_24)
                 .centerCrop()
@@ -171,6 +186,71 @@ public class MyPageFragment extends Fragment {
             Parse(result,sId);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public class getName extends AsyncTask<Void, Integer, String> {
+        String data;
+        String sId;
+
+        public getName(String sId) {
+            this.sId = sId;
+        }
+        @Override
+        protected String doInBackground(Void... unused) {
+            //인풋 파라메터값 생성
+            String param = "u_id=" + sId;
+            try {
+                // 서버연결
+                URL home = new URL(url
+                        +"get_name.php");
+                HttpURLConnection conn = (HttpURLConnection) home.openConnection();
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.connect();
+
+                // 안드로이드 -> 서버 파라메터값 전달
+                OutputStream outs = conn.getOutputStream();
+                outs.write(param.getBytes("UTF-8"));
+                outs.flush();
+                outs.close();
+
+                // 서버 -> 안드로이드 파라메터값 전달
+                InputStream is = null;
+                BufferedReader in = null;
+                data = "";
+
+                is = conn.getInputStream();
+                in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
+                String line = null;
+                StringBuffer buff = new StringBuffer();
+                while ( ( line = in.readLine() ) != null )
+                {
+                    buff.append(line + "\n");
+                }
+                data = buff.toString().trim();
+                Log.e("RECV DATA",data);
+                nameres = data;
+
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String data) {
+            super.onPostExecute(data);
+            Log.e("data",data);
+            name.setText(data);
         }
     }
 }

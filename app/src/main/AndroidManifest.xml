@@ -10,10 +10,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
@@ -22,11 +22,6 @@
             android:label="@string/title_activity_modify"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.search.SearchResult"
-            android:label="@string/title_activity_search_result"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
         <activity
             android:name=".HomeActivity"
             android:screenOrientation="portrait"
