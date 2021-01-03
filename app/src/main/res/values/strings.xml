@@ -58,4 +58,7 @@ Aenean consectetur ante a felis tempor, vitae semper mauris bibendum. Morbi urna
     <string name="notice">사진은 800*800 픽셀의 정사각형 사진을 권장합니다.\n업로드 시 과목을 잘 선택했는지 확인해주세요.\n업로드 후 변경 시 오류가 발생합니다.</string>
     <string name="title_activity_search_result">검색</string>
     <string name="title_activity_modify">수정</string>
+    <string name="title_activity_email">이메일 갱신</string>
+
+    <string name="email_fab">이메일을 올바르게 입력하셨습니까?\n확인을 누르시면 로그아웃과 함께 앱이 종료됩니다.\n다시 실행하셔서 로그인 해주십시오.</string>
 </resources>
