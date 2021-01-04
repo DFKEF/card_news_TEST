@@ -128,26 +128,36 @@ public class Preview extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (likebox.isChecked()) {
-                    Log.e("체크테스트","hgasdfasdf");
-                    SharedPreferences pref = getSharedPreferences(code, MODE_PRIVATE);
+                    if(sId=="") {
+                        Toast.makeText(getApplicationContext(),"로그인을 해 주세요.",Toast.LENGTH_LONG).show();
+                        likebox.setChecked(false);
+                    }else {
+                        Log.e("체크테스트", "hgasdfasdf");
+                        SharedPreferences pref = getSharedPreferences(code, MODE_PRIVATE);
 
-                    // SharedPreferences 의 데이터를 저장/편집 하기위해 Editor 변수를 선언한다.
-                    SharedPreferences.Editor editor = pref.edit();
-                    // key값에 value값을 저장한다.
-                    // String, boolean, int, float, long 값 모두 저장가능하다.
-                    editor.putString("userID",sId);
-                    // 메모리에 있는 데이터를 저장장치에 저장한다.
-                    editor.commit();
-                    Parse parse = new Parse(code,1);
-                    parse.execute();
+                        // SharedPreferences 의 데이터를 저장/편집 하기위해 Editor 변수를 선언한다.
+                        SharedPreferences.Editor editor = pref.edit();
+                        // key값에 value값을 저장한다.
+                        // String, boolean, int, float, long 값 모두 저장가능하다.
+                        editor.putString("userID", sId);
+                        // 메모리에 있는 데이터를 저장장치에 저장한다.
+                        editor.commit();
+                        Parse parse = new Parse(code, 1);
+                        parse.execute();
+                    }
                 }else{
-                    Log.e("체크해제테스트","hgasdfasdf");
-                    SharedPreferences pref = getSharedPreferences(code, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.clear();
-                    editor.commit();
-                    Parse parse = new Parse(code,2);
-                    parse.execute();
+                    if(sId=="") {
+                        Toast.makeText(getApplicationContext(),"로그인을 해 주세요.",Toast.LENGTH_LONG).show();
+                        likebox.setChecked(true);
+                    }else {
+                        Log.e("체크해제테스트", "hgasdfasdf");
+                        SharedPreferences pref = getSharedPreferences(code, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.clear();
+                        editor.commit();
+                        Parse parse = new Parse(code, 2);
+                        parse.execute();
+                    }
                 }
 
             }

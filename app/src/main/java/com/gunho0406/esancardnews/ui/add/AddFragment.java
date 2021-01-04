@@ -118,8 +118,11 @@ public class AddFragment extends Fragment {
         Log.e("res",res);
 
         if (res.isEmpty()) {
+            LinearLayout layout = (LinearLayout) root.findViewById(R.id.add_layout);
+            layout.setVisibility(View.GONE);
             Intent in = new Intent(activity, LoginActivity.class);
             startActivity(in);
+            activity.finish();
         } else {
             activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -91,8 +92,11 @@ public class MyPageFragment extends Fragment {
         SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, MODE_PRIVATE);
         sId = pref.getString("userID", "");
         if (sId.isEmpty()) {
+            LinearLayout layout = (LinearLayout) root.findViewById(R.id.profile_layout);
+            layout.setVisibility(View.GONE);
             Intent in = new Intent(activity, LoginActivity.class);
             startActivity(in);
+            activity.finish();
         } else{
             TextView myID = (TextView) root.findViewById(R.id.myID);
             myID.setText(sId);

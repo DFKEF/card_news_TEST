@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -70,6 +71,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 // 메모리에 있는 데이터를 저장장치에 저장한다.
                 editor.commit();
                 Intent intent = getActivity().getIntent();
+                ActivityCompat.finishAffinity(getActivity());
                 getActivity().finish();
                 startActivity(intent);
                 break;
